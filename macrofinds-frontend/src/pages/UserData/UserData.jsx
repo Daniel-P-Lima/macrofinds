@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import "./UserData.css"
 
 const UserData = () => {
     const [userData, setUserData] = useState({
@@ -35,7 +36,7 @@ const UserData = () => {
       <div className='container'>
         <div className='main-container'>
             <h2>Sua TMB é...</h2>
-            <h1 className='tmb-val'>2.3555cal/dia<img className='heat-img' src='/heat.png'/></h1>
+            <h1 className='tmb-val'>2.3555cal/dia<img className='heat-img' src='/heat.png' alt='heat'/></h1>
             <p>Baseado no seu peso, altura, biotipo e intensidade de atividade física</p>
             <div className='input-container'>
             <form className='input-container-form'>
