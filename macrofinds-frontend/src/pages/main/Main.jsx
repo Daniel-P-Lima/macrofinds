@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import "./Main.css"
 import Section from "./components/Section"
+import Navbar from "../../assets/Navbar/Navbar"
+import Food from "../main/components/Food"
 
 export default function Main(){
   const [dietInfo, setDietInfo] = useState([]);
+  const [foodInfo, setFoodInfo] = useState([]);
 
   useEffect(() => {
     setDietInfo([{"name": "Dieta 1",
@@ -15,11 +18,15 @@ export default function Main(){
                   "food": [[0, "Arroz", "g"]]
                  }])
   }, []);
+  
+  useEffect(() => {
+    setFoodInfo([[0, "Arroz", "g"], [1, "Frango", "g"], [2, "Batata palha", "g"], [3, "Suco de laranja", "ml"]])
+  }, []);
 
   return (
     <div className='dieta-main'>
       <div className='column left-column'>
-
+        <Navbar />
       </div>
 
       <div className='column mid-column'>
@@ -27,7 +34,7 @@ export default function Main(){
           <div className='header'>
             <b> Dietas </b>
           </div>
-          <div className='content'>
+          <div>
             {dietInfo.map((dieta) =>
               <Section info={dieta}/>
             )}
@@ -40,8 +47,10 @@ export default function Main(){
           <div className='header'>
             <b> Alimentos </b>
           </div>
-          <div className='content'>
-            
+          <div className='right-column-content'>
+            {foodInfo.map((food) => 
+              <Food id={food[0]} name={food[1]} unit={food[2]}/>
+            )}
           </div>
         </div>
       </div>
