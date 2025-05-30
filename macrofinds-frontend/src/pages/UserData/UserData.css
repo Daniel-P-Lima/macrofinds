@@ -31,7 +31,6 @@
 }
 
 .header-tmb {
-    display: flex;
     align-items: start;
     justify-content: start;
     border-bottom: solid 0.1px #D9D9D9;
@@ -78,4 +77,40 @@
 .button-calc:hover {
     background-color: #4c4c4c3f;
     cursor: pointer;
+}
+
+.column{
+    box-sizing: border-box;
+    height: 100%;
+}
+
+.left-column{
+    flex: 0 0 15%;
+    border-right: 1px solid #D9D9D9;
+}
+
+.mid-column{
+    flex: 1 1 auto;
+    padding: 12px;
+}
+
+.right-column{
+    flex: 0 0 22%;
+    padding: 12px;
+    border-left: 1px solid #D9D9D9;
+}
+
+.userData-main {
+    display: flex;
+    height: 100%;
+}
+
+
+.container-header {
+    display: flex;
+    align-self: flex-start;
+    padding-left: 10px;
+    box-sizing: border-box;
+    border-bottom: 1px solid #D9D9D9;
+    width: 100%;
 }

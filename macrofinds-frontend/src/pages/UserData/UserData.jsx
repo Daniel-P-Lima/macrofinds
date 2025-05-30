@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-
+import "./UserData.css"
+import Navbar from '../../assets/Navbar/Navbar';
 const UserData = () => {
     const [userData, setUserData] = useState({
         peso: '',
@@ -26,19 +27,16 @@ const UserData = () => {
     }, []);
 
     const calcularTmb = () => {
-        
         const peso = parseFloat(userData.peso);
         const altura = parseFloat(userData.altura);
         const idade = parseFloat(userData.idade);
+
+        if (isNaN(peso) || isNaN(altura) || isNaN(idade)) {
+            alert("Preencha corretamente peso, altura e idade.");
+            return;
+        }
+
         let resultado = 0;
-
-        console.log("peso", peso);
-        console.log("altura", altura);
-        console.log("idade", idade);
-
-
-
-
         if (userData.sexo === 'Masculino') {
             resultado = 66 + (13.7 * peso) + (5 * altura) - (6.8 * idade);
         } else if (userData.sexo === 'Feminino') {
@@ -51,19 +49,22 @@ const UserData = () => {
         else if (userData.intensidade === 'I') fator = 1.45;
 
         const tmbFinal = resultado * fator;
-
         setTmb(tmbFinal.toFixed(2));
     };
 
+
     return (
-        <div className='main'>
-            <div className='header-tmb'>
-                <header>
-                    <h1>Calculadora TMB (Taxa de Metabolismo Basal)</h1>
-                </header>
+        <div className='userData-main'>
+            <div className='column left-column'>
+                <Navbar />
             </div>
-            <div className='container'>
+            <div className='column mid-column user-data'>
+                
+
                 <div className='main-container'>
+                    <header className='container-header'>
+                        <h2>Calculadora TMB (Taxa de Metabolismo Basal)</h2>
+                    </header>
                     <h2>Sua TMB é...</h2>
                     <h1 className='tmb-val'>{tmb ? `${tmb} cal/dia` : '---'}<img className='heat-img' src='/heat.png' /></h1>
                     <p>Baseado no seu peso, altura, sexo, idade e intensidade de atividade física</p>
@@ -113,6 +114,9 @@ const UserData = () => {
                         </form>
                     </div>
                 </div>
+            </div>
+            <div className='container'>
+                
             </div>
         </div>
     );

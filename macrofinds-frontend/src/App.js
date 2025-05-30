@@ -5,12 +5,14 @@ import UserData from "./pages/UserData/UserData";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Main/>}></Route>
-        <Route path="/dadosUsuario" element={<UserData/>}></Route>
-      </Routes>
-    </Router>
+    <div className="app">
+      <Router>
+        <Routes>
+          <Route path="/" element={<Main/>}></Route>
+          <Route path="/dadosUsuario" element={<UserData/>}></Route>
+        </Routes>
+      </Router>
+    </div>
   );
 }
 
