@@ -36,7 +36,7 @@ app.get("/usuario/:id_usuario", (req, res) => {
     const userId = req.params.id_usuario;
 
     db.query(`SELECT altura_usuario,
-        biotipo_usuario,
+        sexo_usuario,
         idade_usuario,
         peso_usuario,
         tipo_atividade_fisica
