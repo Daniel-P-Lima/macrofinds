@@ -1,0 +1,81 @@
+.userdata {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.main-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    border: solid 0.1px #D9D9D9;
+    border-radius: 5px;
+    width: 80%;
+    margin-bottom: 20px;
+}
+
+.main {
+    flex: 1 1 auto;
+    border: solid 0.1px #D9D9D9;
+    margin: 12px;
+    border-radius: 5px;
+}
+
+.header-tmb {
+    display: flex;
+    align-items: start;
+    justify-content: start;
+    border-bottom: solid 0.1px #D9D9D9;
+    margin-bottom: 20px;
+    padding-left: 20px;
+}
+
+.input-container-form {
+    display: flex;
+    flex-direction: column;
+    width: 50vh;
+    gap: 1vh;
+    margin-bottom: 4vh;
+}
+
+.input-container-form input {
+    height: 20px;
+    padding-left: 10px;
+}
+
+.input-container-form select {
+    height: 30px;
+    padding-left: 5px;
+}
+
+.tmb-val {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.heat-img{
+    width: 41px;
+}
+
+.button-calc{
+    margin-top: 20px;
+    background-color: #73737300;
+    border: solid 1px #00000047;
+    border-radius: 5px;
+    height: 30px;
+}
+
+.button-calc:hover {
+    background-color: #4c4c4c3f;
+    cursor: pointer;
+}
