@@ -1,0 +1,29 @@
+# ----------------------
+# Common
+# ----------------------
+.DS_Store
+.env*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ----------------------
+# Frontend (React)
+# ----------------------
+/macrofinds-frontend/node_modules
+/macrofinds-frontend/.pnp
+/macrofinds-frontend/.pnp.js
+/macrofinds-frontend/coverage
+/macrofinds-frontend/build
+/macrofinds-frontend/.env.local
+/macrofinds-frontend/.env.development.local
+/macrofinds-frontend/.env.test.local
+/macrofinds-frontend/.env.production.local
+
+# ----------------------
+# Backend (Node.js)
+# ----------------------
+/macrofinds-backend/node_modules
+/macrofinds-backend/.env
+/macrofinds-backend/.env.local
+/macrofinds-backend/dist

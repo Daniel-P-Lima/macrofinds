@@ -11,6 +11,7 @@
   justify-content: center;
   flex-direction: column;
 }
+
 .main-container {
   display: flex;
   align-items: center;
@@ -76,4 +77,13 @@
 .button-calc:hover {
   background-color: #4c4c4c3f;
   cursor: pointer;
+}
+
+.nav-bar{
+  width: 100%;
+  height: 100px;
+}
+
+.nav-bar > ul{
+  margin: 0;
 }
