@@ -1,4 +1,4 @@
-import Food from "./Food"
+import Content from "./Content"
 
 export default function Section({info}){
     return(
@@ -18,11 +18,7 @@ export default function Section({info}){
                 </div>
                 </div>
             </div>
-            <div className='right-section'>
-                {info.food.map((food) => 
-                    <Food id={food[0]} name={food[1]} unit={food[2]} />
-                )}
-            </div>
+            <Content foodInfo={info.food} contentClass={'right-section'} />
         </div>
     )
 }
