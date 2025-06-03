@@ -29,10 +29,10 @@ export default class Navbar extends Component {
                 </div>
             </Link>
             
-            <div className="row">
+            <Link to={"/metodologia"} className="row">
                 <img src={metodologia_icon} alt="dietas" />
                 Metodologia
-            </div>
+            </Link>
         </div>
     )
   }

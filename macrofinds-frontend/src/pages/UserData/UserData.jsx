@@ -1,29 +1,51 @@
 import React, { useEffect, useState } from 'react';
-import "./UserData.css"
+import {
+    TextField,
+    Button,
+    MenuItem,
+    FormControl,
+    InputLabel,
+    Select,
+    Typography,
+    Box,
+    Checkbox,
+    FormControlLabel,
+    FormGroup
+} from '@mui/material';
 import Navbar from '../../assets/Navbar/Navbar';
+import './UserData.css';
+
 const UserData = () => {
     const [userData, setUserData] = useState({
         peso: '',
         altura: '',
         sexo: '',
         intensidade: '',
-        idade: ''
+        idade: '',
+        tmb_usuario: ''
     });
-
+    const [salvarTmb, setSalvarTmb] = useState(true);
     const [tmb, setTmb] = useState('');
 
     useEffect(() => {
         fetch('http://localhost:3000/usuario/1')
-        .then(res => res.json())
-        .then(data => {
-            setUserData({
-                peso: data.peso_usuario || '',
-                altura: data.altura_usuario || '',
-                sexo: data.sexo_usuario || '',
-                intensidade: data.tipo_atividade_fisica || '',
-                idade: data.idade_usuario || ''
+            .then(res => res.json())
+            .then(data => {
+                setUserData({
+                    peso: data.peso_usuario || '',
+                    altura: data.altura_usuario || '',
+                    sexo: data.sexo_usuario || '',
+                    intensidade: data.tipo_atividade_fisica || '',
+                    idade: data.idade_usuario || '',
+                    tmb_usuario: data.tmb_usuario || ''
+                });
+
+                if (data.tmb_usuario !== null && data.tmb_usuario !== undefined && data.tmb_usuario !== '') {
+                    const valor = parseFloat(data.tmb_usuario).toFixed(2);
+                    setTmb(valor);
+                    console.log("TMB carregada do banco:", valor);
+                }
             });
-        });
     }, []);
 
     const calcularTmb = () => {
@@ -50,8 +72,29 @@ const UserData = () => {
 
         const tmbFinal = resultado * fator;
         setTmb(tmbFinal.toFixed(2));
-    };
 
+        if (salvarTmb) {
+            fetch("http://localhost:3000/usuario/salvarTmb/1", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    tmb: parseFloat(tmbFinal.toFixed(2))
+                })
+            })
+            .then(async (res) => {
+                const text = await res.text();
+                try {
+                    const data = JSON.parse(text);
+                    console.log("Resposta do back:", data);
+                } catch (e) {
+                    console.error("Erro ao fazer parse do JSON:", text);
+                }
+            })
+            .catch(err => console.error("Erro ao salvar TMB:", err));
+        }
+    };
 
     return (
         <div className='userData-main'>
@@ -59,64 +102,105 @@ const UserData = () => {
                 <Navbar />
             </div>
             <div className='column mid-column user-data'>
-                
-
                 <div className='main-container'>
                     <header className='container-header'>
-                        <h2>Calculadora TMB (Taxa de Metabolismo Basal)</h2>
+                        <h5><strong>Calculadora TMB (Taxa de Metabolismo Basal)</strong></h5>
                     </header>
-                    <h2>Sua TMB é...</h2>
-                    <h1 className='tmb-val'>{tmb ? `${tmb} cal/dia` : '---'}<img className='heat-img' src='/heat.png' /></h1>
-                    <p>Baseado no seu peso, altura, sexo, idade e intensidade de atividade física</p>
-                    <div className='input-container'>
-                        <form className='input-container-form' onSubmit={e => e.preventDefault()}>
-                            <label>Peso</label>
-                            <input
-                                type="text"
-                                value={userData.peso}
-                                onChange={e => setUserData({ ...userData, peso: e.target.value })}
-                            />
+                    <Typography variant="h5">Sua TMB é...</Typography>
+                    <Typography variant="h3" className='tmb-val'>
+                        {tmb ? `${tmb} cal/dia` : '---'}
+                        <img className='heat-img' src='/heat.png' alt="heat" />
+                    </Typography>
+                    <Typography variant="body1">
+                        Baseado no seu peso, altura, sexo, idade e intensidade de atividade física
+                    </Typography>
 
-                            <label>Altura</label>
-                            <input
-                                type="text"
-                                value={userData.altura}
-                                onChange={e => setUserData({ ...userData, altura: e.target.value })}
-                            />
+                    <Box
+                        component="form"
+                        noValidate
+                        autoComplete="off"
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 2,
+                            mt: 4,
+                            maxWidth: 400,
+                            width: '100%',
+                            mx: 'auto'   
+                        }}
+                        onSubmit={(e) => e.preventDefault()}
+                    >      
+                        <TextField
+                            label="Idade"
+                            type="number"
+                            variant="outlined"
+                            value={userData.idade}
+                            onChange={(e) => setUserData({ ...userData, idade: e.target.value })}
+                            fullWidth
+                        />
 
-                            <label>Sexo</label>
-                            <select
+                        <TextField
+                            label="Peso (kg)"
+                            type="number"
+                            variant="outlined"
+                            value={userData.peso}
+                            onChange={(e) => setUserData({ ...userData, peso: e.target.value })}
+                            fullWidth
+                        />
+
+                        <TextField
+                            label="Altura (cm)"
+                            type="number"
+                            variant="outlined"
+                            value={userData.altura}
+                            onChange={(e) => setUserData({ ...userData, altura: e.target.value })}
+                            fullWidth
+                        />
+
+                        <FormControl fullWidth>
+                            <InputLabel>Sexo</InputLabel>
+                            <Select
                                 value={userData.sexo}
-                                onChange={e => setUserData({ ...userData, sexo: e.target.value })}
+                                label="Sexo"
+                                variant="outlined"
+                                onChange={(e) => setUserData({ ...userData, sexo: e.target.value })}
                             >
-                                <option value="Masculino">Masculino</option>
-                                <option value="Feminino">Feminino</option>
-                            </select>
+                                <MenuItem value="Masculino">Masculino</MenuItem>
+                                <MenuItem value="Feminino">Feminino</MenuItem>
+                            </Select>
+                        </FormControl>
 
-                            <label>Idade</label>
-                            <input
-                                type="text"
-                                value={userData.idade}
-                                onChange={e => setUserData({ ...userData, idade: e.target.value })}
-                            />
-
-                            <label>Intensidade</label>
-                            <select
+                        <FormControl fullWidth>
+                            <InputLabel>Intensidade</InputLabel>
+                            <Select
                                 value={userData.intensidade}
-                                onChange={e => setUserData({ ...userData, intensidade: e.target.value })}
+                                label="Intensidade"
+                                variant="outlined"
+                                onChange={(e) => setUserData({ ...userData, intensidade: e.target.value })}
                             >
-                                <option value="N">Normal</option>
-                                <option value="M">Moderada</option>
-                                <option value="I">Intensa</option>
-                            </select>
+                                <MenuItem value="N">Normal</MenuItem>
+                                <MenuItem value="M">Moderada</MenuItem>
+                                <MenuItem value="I">Intensa</MenuItem>
+                            </Select>
+                        </FormControl>
 
-                            <button type="button" className='button-calc' onClick={calcularTmb}>Calcular</button>
-                        </form>
-                    </div>
+                        <FormGroup>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={salvarTmb}
+                                        onChange={(e) => setSalvarTmb(e.target.checked)}
+                                    />
+                                }
+                                label="Salvar TMB"
+                            />
+                        </FormGroup>
+
+                        <Button variant="contained" color="primary" onClick={calcularTmb}>
+                            Calcular
+                        </Button>
+                    </Box>
                 </div>
-            </div>
-            <div className='container'>
-                
             </div>
         </div>
     );
