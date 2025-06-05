@@ -1,11 +1,11 @@
 import Content from "./Content"
 
-export default function Section({info}){
+export default function Section({dieta, foodInfo, remove}){
     return(
         <div className='section dietas-box'>
             <div className='left-section'>
-                <div className='left-section-row'> {info.name} </div>
-                <div className='left-section-row'> R$ {info.price} </div>
+                <div className='left-section-row'> {dieta.name} </div>
+                <div className='left-section-row'> R$ {dieta.price} </div>
                 <div className='left-section-values'>
                 <div className='value-box dietas-box'>
                     <div className='value-box-circle'></div> Calorias
@@ -18,7 +18,7 @@ export default function Section({info}){
                 </div>
                 </div>
             </div>
-            <Content foodInfo={info.food} contentClass={'right-section'} />
+            <Content name={dieta.name} dietFoodList={dieta.food} foodInfo={foodInfo} remove={remove} />
         </div>
     )
 }

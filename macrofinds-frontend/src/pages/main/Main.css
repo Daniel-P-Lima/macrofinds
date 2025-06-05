@@ -93,9 +93,13 @@
 }
 
 .food{
+    background-color: #FFF;
     display: flex;
-    cursor: pointer;
     font-size: small;
+}
+
+.clickable{
+    cursor: pointer;
 }
 
 .food-left{
@@ -117,6 +121,35 @@
 .food-right img{
     width: 100%;
     aspect-ratio: 1 / 1;
+}
+
+.food-right-remove{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #F44336;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+    width: 25%;
+    height: 100%;
+}
+
+.food-right-remove img{
+    width: 45%;
+    aspect-ratio: 1 / 1;
+}
+
+@keyframes insertFood{
+    0% {background-color: #6fc27600;}
+    50% {background-color: #6fc276cc;}
+    100% {background-color: #6fc27600;}
+}
+
+.lastFood{
+    display: none;
+    animation: insertFood 2s;
+    animation-iteration-count: infinite;
+    border-radius: 6px;
 }
 
 .food-left-top{

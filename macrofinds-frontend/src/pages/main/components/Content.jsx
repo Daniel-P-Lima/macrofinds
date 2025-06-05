@@ -1,20 +1,24 @@
 import { useDroppable } from "@dnd-kit/core"
 import Food from "./Food"
 
-export default function Content({foodInfo, contentClass}){
+export default function Content({name, dietFoodList, foodInfo, remove}){
     const {isOver, setNodeRef} = useDroppable({
-        id: contentClass
+        id: name
     })
 
     const style = {
-        color: isOver ? "green" : undefined
+        display: isOver && dietFoodList.length < 9 ? "block" : "none"
     }
 
+    console.log(dietFoodList)
+    console.log(foodInfo)
+
     return(
-        <div className={contentClass} ref={setNodeRef} style={style}>
-            {foodInfo.map((food) => 
-                <Food id={food[0]} name={food[1]} unit={food[2]}/>
+        <div className='right-section' ref={setNodeRef}>
+            {dietFoodList.map((foodId) => 
+                <Food food={foodInfo[foodId]} remove={remove} dietName={name} />
             )}
+            <div className="lastFood" style={style}></div>
         </div>
     )
 }
