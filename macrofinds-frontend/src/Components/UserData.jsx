@@ -1,121 +1,137 @@
 import React, { useEffect, useState } from 'react';
+import {
+  Container,
+  Box,
+  Typography,
+  TextField,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+  Button,
+  Card,
+  CardContent
+} from '@mui/material';
 
 const UserData = () => {
-    const [userData, setUserData] = useState({
-        peso: '',
-        altura: '',
-        sexo: '',
-        intensidade: '',
-        idade: ''
-    });
+  const [userData, setUserData] = useState({
+    peso: '',
+    altura: '',
+    sexo: '',
+    intensidade: '',
+    idade: ''
+  });
 
-    const [tmb, setTmb] = useState('');
+  const [tmb, setTmb] = useState('');
 
-    useEffect(() => {
-        fetch('http://localhost:3000/usuario/1')
-        .then(res => res.json())
-        .then(data => {
-            setUserData({
-                peso: data.peso_usuario || '',
-                altura: data.altura_usuario || '',
-                sexo: data.sexo_usuario || '',
-                intensidade: data.tipo_atividade_fisica || '',
-                idade: data.idade_usuario || ''
-            });
+  useEffect(() => {
+    fetch('http://localhost:5000/usuario/1')
+      .then(res => res.json())
+      .then(data => {
+        setUserData({
+          peso: data.peso_usuario || '',
+          altura: data.altura_usuario || '',
+          sexo: data.sexo_usuario || '',
+          intensidade: data.tipo_atividade_fisica || '',
+          idade: data.idade_usuario || ''
         });
-    }, []);
+      });
+  }, []);
 
-    const calcularTmb = () => {
-        
-        const peso = parseFloat(userData.peso);
-        const altura = parseFloat(userData.altura);
-        const idade = parseFloat(userData.idade);
-        let resultado = 0;
+  const calcularTmb = () => {
+    const peso = parseFloat(userData.peso);
+    const altura = parseFloat(userData.altura);
+    const idade = parseFloat(userData.idade);
+    let resultado = 0;
 
-        console.log("peso", peso);
-        console.log("altura", altura);
-        console.log("idade", idade);
+    if (userData.sexo === 'Masculino') {
+      resultado = 66 + 13.7 * peso + 5 * altura - 6.8 * idade;
+    } else if (userData.sexo === 'Feminino') {
+      resultado = 655 + 9.6 * peso + 1.7 * altura - 4.7 * idade;
+    }
 
+    let fator = 1;
+    if (userData.intensidade === 'N') fator = 1.2;
+    else if (userData.intensidade === 'M') fator = 1.35;
+    else if (userData.intensidade === 'I') fator = 1.45;
 
+    const tmbFinal = resultado * fator;
+    setTmb(tmbFinal.toFixed(2));
+  };
 
+  return (
+    <Container maxWidth="sm" sx={{ mt: 4 }}>
+      <Card elevation={3}>
+        <CardContent>
+          <Typography variant="h4" align="center" gutterBottom>
+            Calculadora TMB (Taxa de Metabolismo Basal)
+          </Typography>
 
-        if (userData.sexo === 'Masculino') {
-            resultado = 66 + (13.7 * peso) + (5 * altura) - (6.8 * idade);
-        } else if (userData.sexo === 'Feminino') {
-            resultado = 655 + (9.6 * peso) + (1.7 * altura) - (4.7 * idade);
-        }
+          <Box sx={{ textAlign: 'center', mb: 3 }}>
+            <Typography variant="h6">Sua TMB é...</Typography>
+            <Typography variant="h3" color="primary" sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 1 }}>
+              {tmb ? `${tmb} cal/dia` : '---'}
+              <Box component="img" src="/heat.png" alt="heat" height={40} />
+            </Typography>
+            <Typography variant="body2">
+              Baseado no seu peso, altura, sexo, idade e intensidade de atividade física
+            </Typography>
+          </Box>
 
-        let fator = 1;
-        if (userData.intensidade === 'N') fator = 1.2;
-        else if (userData.intensidade === 'M') fator = 1.35;
-        else if (userData.intensidade === 'I') fator = 1.45;
+          <Box component="form" onSubmit={e => e.preventDefault()} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <TextField
+              label="Peso (kg)"
+              value={userData.peso}
+              onChange={e => setUserData({ ...userData, peso: e.target.value })}
+              fullWidth
+            />
+            <TextField
+              label="Altura (cm)"
+              value={userData.altura}
+              onChange={e => setUserData({ ...userData, altura: e.target.value })}
+              fullWidth
+            />
 
-        const tmbFinal = resultado * fator;
+            <FormControl fullWidth>
+              <InputLabel>Sexo</InputLabel>
+              <Select
+                value={userData.sexo}
+                label="Sexo"
+                onChange={e => setUserData({ ...userData, sexo: e.target.value })}
+              >
+                <MenuItem value="Masculino">Masculino</MenuItem>
+                <MenuItem value="Feminino">Feminino</MenuItem>
+              </Select>
+            </FormControl>
 
-        setTmb(tmbFinal.toFixed(2));
-    };
+            <TextField
+              label="Idade"
+              value={userData.idade}
+              onChange={e => setUserData({ ...userData, idade: e.target.value })}
+              fullWidth
+            />
 
-    return (
-        <div className='main'>
-            <div className='header-tmb'>
-                <header>
-                    <h1>Calculadora TMB (Taxa de Metabolismo Basal)</h1>
-                </header>
-            </div>
-            <div className='container'>
-                <div className='main-container'>
-                    <h2>Sua TMB é...</h2>
-                    <h1 className='tmb-val'>{tmb ? `${tmb} cal/dia` : '---'}<img className='heat-img' src='/heat.png' /></h1>
-                    <p>Baseado no seu peso, altura, sexo, idade e intensidade de atividade física</p>
-                    <div className='input-container'>
-                        <form className='input-container-form' onSubmit={e => e.preventDefault()}>
-                            <label>Peso</label>
-                            <input
-                                type="text"
-                                value={userData.peso}
-                                onChange={e => setUserData({ ...userData, peso: e.target.value })}
-                            />
+            <FormControl fullWidth>
+              <InputLabel>Intensidade</InputLabel>
+              <Select
+                value={userData.intensidade}
+                label="Intensidade"
+                onChange={e => setUserData({ ...userData, intensidade: e.target.value })}
+              >
+                <MenuItem value="N">Normal</MenuItem>
+                <MenuItem value="M">Moderada</MenuItem>
+                <MenuItem value="I">Intensa</MenuItem>
+              </Select>
+            </FormControl>
 
-                            <label>Altura</label>
-                            <input
-                                type="text"
-                                value={userData.altura}
-                                onChange={e => setUserData({ ...userData, altura: e.target.value })}
-                            />
-
-                            <label>Sexo</label>
-                            <select
-                                value={userData.sexo}
-                                onChange={e => setUserData({ ...userData, sexo: e.target.value })}
-                            >
-                                <option value="Masculino">Masculino</option>
-                                <option value="Feminino">Feminino</option>
-                            </select>
-
-                            <label>Idade</label>
-                            <input
-                                type="text"
-                                value={userData.idade}
-                                onChange={e => setUserData({ ...userData, idade: e.target.value })}
-                            />
-
-                            <label>Intensidade</label>
-                            <select
-                                value={userData.intensidade}
-                                onChange={e => setUserData({ ...userData, intensidade: e.target.value })}
-                            >
-                                <option value="N">Normal</option>
-                                <option value="M">Moderada</option>
-                                <option value="I">Intensa</option>
-                            </select>
-
-                            <button type="button" className='button-calc' onClick={calcularTmb}>Calcular</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
+            <Button variant="contained" size="large" onClick={calcularTmb}>
+              Calcular
+            </Button>
+          </Box>
+        </CardContent>
+      </Card>
+    </Container>
+  );
 };
 
 export default UserData;

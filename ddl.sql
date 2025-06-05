@@ -9,8 +9,9 @@ CREATE TABLE usuarios (
 	email_usuario VARCHAR(255) NOT NULL,
 	sexo_usuario VARCHAR(50) DEFAULT NULL,
 	tmb_usuario DECIMAL(6,2) DEFAULT NULL,
-	tipo_atividade_fisica ENUM("N", "M", "I"), -- N - nenhuma, M - moderada, I - intensa
+	tipo_atividade_fisica ENUM("N", "M", "I"),
 	senha_usuario VARCHAR(255) NOT NULL,
+	tmb: FLOAT NOT NULL,
 	data_criacao_usuario DATETIME DEFAULT CURRENT_TIMESTAMP,
 	data_atualizacao_usuario DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );

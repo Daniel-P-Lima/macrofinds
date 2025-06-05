@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model dietas {
+  id_dieta               Int               @id @unique(map: "id_dieta") @default(autoincrement())
+  nome_dieta             String            @db.VarChar(255)
+  objetivo_dieta         String            @db.VarChar(255)
+  data_criacao_dieta     DateTime?         @default(now()) @db.DateTime(0)
+  data_atualizacao_dieta DateTime?         @default(now()) @db.DateTime(0)
+  fk_id_usuario          Int
+  usuarios               usuarios          @relation(fields: [fk_id_usuario], references: [id_usuario], onDelete: NoAction, onUpdate: NoAction, map: "dietas_ibfk_1")
+  usuarios_dietas        usuarios_dietas[]
+
+  @@index([fk_id_usuario], map: "fk_id_usuario")
+}
+
+model usuarios {
+  id_usuario               Int                             @id @unique(map: "id_usuario") @default(autoincrement())
+  tmb_usuario              Float?                          @db.Float
+  nome_usuario             String                          @db.VarChar(255)
+  idade_usuario            Int
+  peso_usuario             Float                           @db.Float
+  altura_usuario           Float                           @db.Float
+  email_usuario            String                          @db.VarChar(255)
+  sexo_usuario             String?                         @db.VarChar(50)
+  tipo_atividade_fisica    usuarios_tipo_atividade_fisica?
+  senha_usuario            String                          @db.VarChar(255)
+  data_criacao_usuario     DateTime?                       @default(now()) @db.DateTime(0)
+  data_atualizacao_usuario DateTime?                       @default(now()) @db.DateTime(0)
+  dietas                   dietas[]
+  usuarios_dietas          usuarios_dietas[]
+}
+
+model usuarios_dietas {
+  id_usuario_dieta Int      @id @unique(map: "id_usuario_dieta") @default(autoincrement())
+  fk_id_dieta      Int
+  fk_id_usuario    Int
+  dietas           dietas   @relation(fields: [fk_id_dieta], references: [id_dieta], onDelete: NoAction, onUpdate: NoAction, map: "usuarios_dietas_ibfk_1")
+  usuarios         usuarios @relation(fields: [fk_id_usuario], references: [id_usuario], onDelete: NoAction, onUpdate: NoAction, map: "usuarios_dietas_ibfk_2")
+
+  @@index([fk_id_dieta], map: "fk_id_dieta")
+  @@index([fk_id_usuario], map: "fk_id_usuario")
+}
+
+enum usuarios_tipo_atividade_fisica {
+  N
+  M
+  I
+}

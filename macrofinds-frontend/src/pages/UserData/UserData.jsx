@@ -28,7 +28,7 @@ const UserData = () => {
     const [tmb, setTmb] = useState('');
 
     useEffect(() => {
-        fetch('http://localhost:3000/usuario/1')
+        fetch('http://localhost:5000/usuario/1')
             .then(res => res.json())
             .then(data => {
                 setUserData({
@@ -74,7 +74,7 @@ const UserData = () => {
         setTmb(tmbFinal.toFixed(2));
 
         if (salvarTmb) {
-            fetch("http://localhost:3000/usuario/salvarTmb/1", {
+            fetch("http://localhost:5000/usuario/salvarTmb/1", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
