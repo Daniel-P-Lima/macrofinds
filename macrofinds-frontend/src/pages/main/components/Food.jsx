@@ -1,16 +1,16 @@
-import grip from "../assets/grip-vertical.svg"
+import x from "../assets/x.svg"
 
-export default function Food({name, unit, id}){
+export default function Food({food, dietName, remove}){
     return(
         <div className='food dietas-box'>
             <div className='food-left'>
-                <div className='food-left-top'> {name} </div>
+                <div className='food-left-top'> {food.name} </div>
                 <div className='food-left-bot'>
-                <input id={id} type="text" className='dietas-box'/> {unit}
+                <input id="1" type="text" className='dietas-box food-left-bot-input'/> {food.unit}
                 </div>
             </div>
-            <div className='food-right'>
-                <img src={grip} alt="grip"/>
+            <div className='food-right-remove clickable' onClick={() => remove(dietName, food.id)}>
+                <img src={x} alt="remove"/>
             </div>
         </div>
     )
