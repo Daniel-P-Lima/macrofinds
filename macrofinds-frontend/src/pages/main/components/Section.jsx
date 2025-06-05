@@ -4,17 +4,17 @@ export default function Section({dieta, foodInfo, remove}){
     return(
         <div className='section dietas-box'>
             <div className='left-section'>
-                <div className='left-section-row'> {dieta.name} </div>
-                <div className='left-section-row'> R$ {dieta.price} </div>
+                <h6 className='no-margin'><strong> {dieta.name} </strong></h6>
+                <p className='no-margin'> R$ {dieta.price} </p>
                 <div className='left-section-values'>
                 <div className='value-box dietas-box'>
-                    <div className='value-box-circle'></div> Calorias
+                    <div className='value-box-circle'></div> <p className="no-margin">Calorias</p>
                 </div>
                 <div className='value-box dietas-box'>
-                    <div className='value-box-circle'></div> Carboidratos
+                    <div className='value-box-circle'></div> <p className="no-margin">Carboidratos</p>
                 </div>
                 <div className='value-box dietas-box'>
-                    <div className='value-box-circle'></div> Proteínas
+                    <div className='value-box-circle'></div> <p className="no-margin">Proteínas</p>
                 </div>
                 </div>
             </div>

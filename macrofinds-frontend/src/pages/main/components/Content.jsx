@@ -10,9 +10,6 @@ export default function Content({name, dietFoodList, foodInfo, remove}){
         display: isOver && dietFoodList.length < 9 ? "block" : "none"
     }
 
-    console.log(dietFoodList)
-    console.log(foodInfo)
-
     return(
         <div className='right-section' ref={setNodeRef}>
             {dietFoodList.map((foodId) => 

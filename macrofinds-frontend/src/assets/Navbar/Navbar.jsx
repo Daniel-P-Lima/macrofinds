@@ -16,20 +16,20 @@ export default class Navbar extends Component {
                 USER_NAME
             </div>
             <Link to={"/"}>
-                <div className="row">
+                <div className="navbar-row">
                     <img src={dietas_icon} alt="dietas" />
                     Dietas
                 </div>
             </Link>
             
             <Link to={"/dadosUsuario"}>
-                <div className="row">
+                <div className="navbar-row">
                     <img src={tmb_icon} alt="dietas" />
                     Calculadora de TMB
                 </div>
             </Link>
             
-            <Link to={"/metodologia"} className="row">
+            <Link to={"/metodologia"} className="navbar-row">
                 <img src={metodologia_icon} alt="dietas" />
                 Metodologia
             </Link>

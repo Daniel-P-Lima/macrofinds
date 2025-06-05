@@ -8,7 +8,7 @@
   color: black;
 }
 
-.row{
+.navbar-row{
   display: flex;
   height: 40px;
   padding: 12px 24px;
@@ -16,11 +16,11 @@
   font-weight: bold;
 }
 
-.row:hover{
+.navbar-row:hover{
   background-color: #a0a0a0;
 }
 
-.row img{
+.navbar-row img{
   margin-right: 12px;
   height: 60%;
   aspect-ratio: 1 / 1;

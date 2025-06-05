@@ -13,9 +13,9 @@ export default function DraggableFood({food}){
     return(
         <div className='food dietas-box clickable' ref={setNodeRef} style={style} {...listeners} {...attributes}>
             <div className='food-left'>
-                <div className='food-left-top'> {food.name} </div>
+                <p className="food-left-top">{food.name}</p>
                 <div className='food-left-bot'>
-                <input id={food.id} type="text" className='dietas-box'/> {food.unit}
+                <input id={food.id} type="text" className='dietas-box'/> <p>{food.unit}</p>
                 </div>
             </div>
             <div className='food-right'>

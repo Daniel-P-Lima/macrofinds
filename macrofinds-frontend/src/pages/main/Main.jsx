@@ -69,9 +69,9 @@ export default function Main(){
       <DndContext onDragEnd={handleDragEnd}>
         <div className='column mid-column'>
           <div className='dietas-box'>
-            <div className='header'>
-              <b> Dietas </b>
-            </div>
+            <header className='header'>
+              <h5><strong> Dietas </strong></h5>
+            </header>
             <div>
               {dietInfo.map((dieta) =>
                 <Section dieta={dieta} foodInfo={foodInfo} remove={removeFoodFromDiet} />
@@ -82,9 +82,9 @@ export default function Main(){
 
         <div className='column right-column'>
           <div className='dietas-box'>
-            <div className='header'>
-              <b> Alimentos </b>
-            </div>
+            <header className='header'>
+              <h5><strong> Alimentos </strong></h5>
+            </header>
             <div className='right-column-content'>
               {foodInfo.map((food) =>
                 <DraggableFood food={food}/>
