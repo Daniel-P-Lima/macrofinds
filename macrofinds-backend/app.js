@@ -46,6 +46,37 @@ app.get("/usuario/:id_usuario", async (req, res) => {
   }
 });
 
+app.post("/usuario/:id_usuario", async (req, res) => {
+  const {
+    peso,            // kg
+    altura,          // cm
+    sexo,            // 'Masculino' | 'Feminino'
+    intensidade,     // 'N' | 'M' | 'I'
+    idade,           // anos
+    tmb              // opcional
+  } = req.body;
+
+  // monta objeto só com o que veio preenchido
+  const data = {};
+  if (peso        !== undefined) data.peso_usuario     = peso;
+  if (altura      !== undefined) data.altura_usuario   = altura;
+  if (sexo        !== undefined) data.sexo_usuario     = sexo;
+  if (intensidade !== undefined) data.tipo_atividade_fisica = intensidade;
+  if (idade       !== undefined) data.idade_usuario    = idade;
+  if (tmb         !== undefined) data.tmb_usuario      = tmb;
+
+  try {
+    await prisma.usuarios.update({
+      where: { id_usuario: Number(req.params.id_usuario) },
+      data
+    });
+    res.json({ ok: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Falha ao salvar" });
+  }
+});
+
 /* Atualiza TMB do usuário */
 app.post("/usuario/salvarTmb/:id_usuario", async (req, res) => {
   const { tmb } = req.body;

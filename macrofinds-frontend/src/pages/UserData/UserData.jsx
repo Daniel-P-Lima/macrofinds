@@ -74,25 +74,28 @@ const UserData = () => {
         setTmb(tmbFinal.toFixed(2));
 
         if (salvarTmb) {
-            fetch("http://localhost:5000/usuario/salvarTmb/1", {
+            fetch("http://localhost:5000/usuario/1", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
+                    peso: parseFloat(userData.peso),
+                    altura: parseFloat(userData.altura),
+                    sexo: userData.sexo,
+                    intensidade: userData.intensidade,
+                    idade: parseInt(userData.idade, 10),
                     tmb: parseFloat(tmbFinal.toFixed(2))
                 })
             })
-            .then(async (res) => {
-                const text = await res.text();
-                try {
-                    const data = JSON.parse(text);
-                    console.log("Resposta do back:", data);
-                } catch (e) {
-                    console.error("Erro ao fazer parse do JSON:", text);
-                }
-            })
-            .catch(err => console.error("Erro ao salvar TMB:", err));
+                .then(async (res) => {
+                    const text = await res.text();
+                    try {
+                        const data = JSON.parse(text);
+                        console.log("Resposta do back:", data);
+                    } catch (e) {
+                        console.error("Erro ao fazer parse do JSON:", text);
+                    }
+                })
+                .catch(err => console.error("Erro ao salvar TMB:", err));
         }
     };
 
@@ -126,10 +129,10 @@ const UserData = () => {
                             mt: 4,
                             maxWidth: 400,
                             width: '100%',
-                            mx: 'auto'   
+                            mx: 'auto'
                         }}
                         onSubmit={(e) => e.preventDefault()}
-                    >      
+                    >
                         <TextField
                             label="Idade"
                             type="number"
