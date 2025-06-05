@@ -8,6 +8,7 @@ CREATE TABLE usuarios (
 	altura_usuario FLOAT NOT NULL,
 	email_usuario VARCHAR(255) NOT NULL,
 	sexo_usuario VARCHAR(50) DEFAULT NULL,
+	tmb_usuario DECIMAL(6,2) DEFAULT NULL,
 	tipo_atividade_fisica ENUM("N", "M", "I"), -- N - nenhuma, M - moderada, I - intensa
 	senha_usuario VARCHAR(255) NOT NULL,
 	data_criacao_usuario DATETIME DEFAULT CURRENT_TIMESTAMP,

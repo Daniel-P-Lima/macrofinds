@@ -114,3 +114,10 @@
     border-bottom: 1px solid #D9D9D9;
     width: 100%;
 }
+
+.container-botoes {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}

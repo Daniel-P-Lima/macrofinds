@@ -39,12 +39,42 @@ app.get("/usuario/:id_usuario", (req, res) => {
         sexo_usuario,
         idade_usuario,
         peso_usuario,
-        tipo_atividade_fisica
+        tipo_atividade_fisica,
+        tmb_usuario
         FROM usuarios WHERE id_usuario = ?`, [userId], (err, results) => {
         if (err) return res.status(500).send(err);
         res.json(results[0]);
     });
 });
+
+/*
+    Query para inserção de tmb no usuário
+*/
+
+app.post("/usuario/salvarTmb/:id_usuario", (req, res) => {
+    const userId = req.params.id_usuario;
+    const { tmb } = req.body;
+
+    if (!tmb) {
+        return res.status(400).json({ error: "TMB não fornecida" });
+    }
+
+    const query = `
+        UPDATE usuarios
+        SET tmb_usuario = ?
+        WHERE id_usuario = ?
+    `;
+
+    db.query(query, [tmb, userId], (err, results) => {
+        if (err) {
+            console.error("Erro ao atualizar TMB:", err);
+            return res.status(500).json({ error: "Erro ao salvar TMB" });
+        }
+
+        return res.status(200).json({ message: "TMB atualizada com sucesso!" });
+    });
+});
+
 
 app.listen(3000, () => {
     console.log("Servidor rodando na porta 3000");
