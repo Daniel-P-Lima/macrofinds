@@ -8,7 +8,7 @@ import {
   Stack,
 } from "@mui/material";
 import "typeface-inter";
-import "../../assets/login.css"; 
+import "./login.css"; 
 
 export default function Login() {
   return (
@@ -59,7 +59,7 @@ export default function Login() {
           </Button>
 
           <Typography textAlign="center" sx={{ mt: 1 }}>
-            Novo aqui? 
+            Novo aqui? &nbsp;
             <a href="/register" style={{ textDecoration: "none", color: "#1a73e8" }}>
               Registre-se
             </a>
