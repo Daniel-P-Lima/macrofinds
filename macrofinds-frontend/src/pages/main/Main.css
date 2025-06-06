@@ -200,7 +200,7 @@
     gap: 6px;
 }
 
-@media only screen and (max-width: 1595px){
+/*@media only screen and (max-width: 1595px){
     .right-column-content{
         grid-template-columns: repeat(1, 1fr);
     }
@@ -210,4 +210,4 @@
     .right-section{
         grid-template-columns: repeat(2, 1fr);
     }
-}
+}*/
