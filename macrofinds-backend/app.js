@@ -1,81 +1,104 @@
-const express = require("express");
-const cors = require("cors");
-const mysql = require("mysql2");
+require("dotenv").config();
 
-const app = express();
+const express = require("express");
+const cors    = require("cors");
+const { PrismaClient } = require("@prisma/client");
+
+const prisma = new PrismaClient();
+const app    = express();
+
 app.use(cors());
 app.use(express.json());
 
-const db = mysql.createConnection({
-    host : "localhost",
-    user : "root",
-    password : "Oportunity23#",
-    database : "macrofinds"
+app.get("/", (_, res) => res.send("API rodando"));
+
+/* Lista todas as dietas */
+app.get("/dietas", async (_, res) => {
+  try {
+    const dietas = await prisma.dietas.findMany();
+    res.json(dietas);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send(err);
+  }
 });
 
-db.connect(err => {
-    if (err) throw err;
-    console.log("Conectado ao MySQL");
-});
-
-app.get("/", (req, res) => {
-    res.send("API rodando");
-});
-
-app.get("/dietas", (req, res) => {
-    db.query("SELECT * FROM dietas", (err, results) => {
-        if (err) return res.status(500).send(err);
-        res.json(results); 
-    })
-});
-
-/*
-    Query para busca de dados, serve para poder calcular a TMB
-*/
-app.get("/usuario/:id_usuario", (req, res) => {
-    const userId = req.params.id_usuario;
-
-    db.query(`SELECT altura_usuario,
-        sexo_usuario,
-        idade_usuario,
-        peso_usuario,
-        tipo_atividade_fisica,
-        tmb_usuario
-        FROM usuarios WHERE id_usuario = ?`, [userId], (err, results) => {
-        if (err) return res.status(500).send(err);
-        res.json(results[0]);
+/* Busca dados para cálculo de TMB */
+app.get("/usuario/:id_usuario", async (req, res) => {
+  try {
+    const usuario = await prisma.usuarios.findUnique({
+      where: { id_usuario: Number(req.params.id_usuario) },
+      select: {
+        altura_usuario: true,
+        sexo_usuario: true,
+        idade_usuario: true,
+        peso_usuario: true,
+        tipo_atividade_fisica: true,
+        tmb_usuario: true 
+      }
     });
+    if (!usuario)
+      return res.status(404).json({ error: "Usuário não encontrado" });
+    res.json(usuario);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send(err);
+  }
 });
 
-/*
-    Query para inserção de tmb no usuário
-*/
+app.post("/usuario/:id_usuario", async (req, res) => {
+  const {
+    peso,            // kg
+    altura,          // cm
+    sexo,            // 'Masculino' | 'Feminino'
+    intensidade,     // 'N' | 'M' | 'I'
+    idade,           // anos
+    tmb              // opcional
+  } = req.body;
 
-app.post("/usuario/salvarTmb/:id_usuario", (req, res) => {
-    const userId = req.params.id_usuario;
-    const { tmb } = req.body;
+  // monta objeto só com o que veio preenchido
+  const data = {};
+  if (peso        !== undefined) data.peso_usuario     = peso;
+  if (altura      !== undefined) data.altura_usuario   = altura;
+  if (sexo        !== undefined) data.sexo_usuario     = sexo;
+  if (intensidade !== undefined) data.tipo_atividade_fisica = intensidade;
+  if (idade       !== undefined) data.idade_usuario    = idade;
+  if (tmb         !== undefined) data.tmb_usuario      = tmb;
 
-    if (!tmb) {
-        return res.status(400).json({ error: "TMB não fornecida" });
-    }
-
-    const query = `
-        UPDATE usuarios
-        SET tmb_usuario = ?
-        WHERE id_usuario = ?
-    `;
-
-    db.query(query, [tmb, userId], (err, results) => {
-        if (err) {
-            console.error("Erro ao atualizar TMB:", err);
-            return res.status(500).json({ error: "Erro ao salvar TMB" });
-        }
-
-        return res.status(200).json({ message: "TMB atualizada com sucesso!" });
+  try {
+    await prisma.usuarios.update({
+      where: { id_usuario: Number(req.params.id_usuario) },
+      data
     });
+    res.json({ ok: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Falha ao salvar" });
+  }
 });
 
+/* Atualiza TMB do usuário */
+app.post("/usuario/salvarTmb/:id_usuario", async (req, res) => {
+  const { tmb } = req.body;
+  if (tmb == null)
+    return res.status(400).json({ error: "TMB não fornecida" });
 
-app.listen(3000, () => {
-    console.log("Servidor rodando na porta 3000");
+  try {
+    await prisma.usuarios.update({
+      where: { id_usuario: Number(req.params.id_usuario) },
+      data:  { tmb_usuario: tmb }
+    });
+    res.json({ message: "TMB atualizada com sucesso!" });
+  } catch (err) {
+    console.error("Erro ao atualizar TMB:", err);
+    res.status(500).json({ error: "Erro ao salvar TMB" });
+  }
+});
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
+
+process.on("SIGINT", async () => {
+  await prisma.$disconnect();
+  process.exit();
 });
