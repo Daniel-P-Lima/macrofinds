@@ -28,7 +28,7 @@ const UserData = () => {
     const [tmb, setTmb] = useState('');
 
     useEffect(() => {
-        fetch('http://localhost:3000/usuario/1')
+        fetch('http://localhost:5000/usuario/1')
             .then(res => res.json())
             .then(data => {
                 setUserData({
@@ -74,25 +74,28 @@ const UserData = () => {
         setTmb(tmbFinal.toFixed(2));
 
         if (salvarTmb) {
-            fetch("http://localhost:3000/usuario/salvarTmb/1", {
+            fetch("http://localhost:5000/usuario/1", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
+                    peso: parseFloat(userData.peso),
+                    altura: parseFloat(userData.altura),
+                    sexo: userData.sexo,
+                    intensidade: userData.intensidade,
+                    idade: parseInt(userData.idade, 10),
                     tmb: parseFloat(tmbFinal.toFixed(2))
                 })
             })
-            .then(async (res) => {
-                const text = await res.text();
-                try {
-                    const data = JSON.parse(text);
-                    console.log("Resposta do back:", data);
-                } catch (e) {
-                    console.error("Erro ao fazer parse do JSON:", text);
-                }
-            })
-            .catch(err => console.error("Erro ao salvar TMB:", err));
+                .then(async (res) => {
+                    const text = await res.text();
+                    try {
+                        const data = JSON.parse(text);
+                        console.log("Resposta do back:", data);
+                    } catch (e) {
+                        console.error("Erro ao fazer parse do JSON:", text);
+                    }
+                })
+                .catch(err => console.error("Erro ao salvar TMB:", err));
         }
     };
 
@@ -106,34 +109,62 @@ const UserData = () => {
                     <header className='container-header'>
                         <h5><strong>Calculadora TMB (Taxa de Metabolismo Basal)</strong></h5>
                     </header>
-                    <div className='container-content'>
-                        <Typography variant="h5">Sua TMB é...</Typography>
-                        <Typography variant="h3" className='tmb-val'>
-                            {tmb ? `${tmb} cal/dia` : '---'}
-                            <img className='heat-img' src='/heat.png' alt="heat" />
-                        </Typography>
-                        <Typography variant="body1">
-                            Baseado no seu peso, altura, sexo, idade e intensidade de atividade física
-                        </Typography>
+                    <Typography variant="h5">Sua TMB é...</Typography>
+                    <Typography variant="h3" className='tmb-val'>
+                        {tmb ? `${tmb} cal/dia` : '---'}
+                        <img className='heat-img' src='/heat.png' alt="heat" />
+                    </Typography>
+                    <Typography variant="body1">
+                        Baseado no seu peso, altura, sexo, idade e intensidade de atividade física
+                    </Typography>
 
-                        <Box
-                            component="form"
-                            noValidate
-                            autoComplete="off"
-                            sx={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                gap: 2,
-                                mt: 4,
-                                maxWidth: 400,
-                                width: '100%',
-                                mx: 'auto'   
-                            }}
-                            onSubmit={(e) => e.preventDefault()}
-                        >      
-                            <TextField
-                                label="Idade"
-                                type="number"
+                    <Box
+                        component="form"
+                        noValidate
+                        autoComplete="off"
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 2,
+                            mt: 4,
+                            maxWidth: 400,
+                            width: '100%',
+                            mx: 'auto'
+                        }}
+                        onSubmit={(e) => e.preventDefault()}
+                    >
+                        <TextField
+                            label="Idade"
+                            type="number"
+                            variant="outlined"
+                            value={userData.idade}
+                            onChange={(e) => setUserData({ ...userData, idade: e.target.value })}
+                            fullWidth
+                        />
+
+                        <TextField
+                            label="Peso (kg)"
+                            type="number"
+                            variant="outlined"
+                            value={userData.peso}
+                            onChange={(e) => setUserData({ ...userData, peso: e.target.value })}
+                            fullWidth
+                        />
+
+                        <TextField
+                            label="Altura (cm)"
+                            type="number"
+                            variant="outlined"
+                            value={userData.altura}
+                            onChange={(e) => setUserData({ ...userData, altura: e.target.value })}
+                            fullWidth
+                        />
+
+                        <FormControl fullWidth>
+                            <InputLabel>Sexo</InputLabel>
+                            <Select
+                                value={userData.sexo}
+                                label="Sexo"
                                 variant="outlined"
                                 value={userData.idade}
                                 onChange={(e) => setUserData({ ...userData, idade: e.target.value })}
