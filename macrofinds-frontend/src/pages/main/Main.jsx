@@ -102,8 +102,8 @@ export default function Main(){
       <DndContext onDragEnd={handleDragEnd} onDragOver={handleDragOver}>
         <div className='column mid-column'>
           <div className='dietas-box'>
-            <header className='header'>
-              <h5><strong> Dietas </strong></h5>
+            <header className='dietas-box-header'>
+              <strong> Dietas </strong>
             </header>
             <div>
               {dietInfo.map((dieta) =>
@@ -115,8 +115,8 @@ export default function Main(){
 
         <div className='column right-column'>
           <div className='dietas-box'>
-            <header className='header'>
-              <h5><strong> Alimentos </strong></h5>
+            <header className='dietas-box-header'>
+              <strong> Alimentos </strong>
             </header>
             <div className='right-column-content'>
               {foodInfo.map((food) =>
