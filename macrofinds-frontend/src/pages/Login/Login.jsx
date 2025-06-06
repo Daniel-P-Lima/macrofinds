@@ -21,12 +21,12 @@ export default function Login() {
           <form>
             <div className="input-field">
               <input id="email" type="email" className="validate" />
-              <label htmlFor="email">email:</label>
+              <label htmlFor="email">email</label>
             </div>
 
             <div className="input-field">
               <input id="senha" type="password" className="validate" />
-              <label htmlFor="senha">senha:</label>
+              <label htmlFor="senha">senha</label>
             </div>
 
             <button
