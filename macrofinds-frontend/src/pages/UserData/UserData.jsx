@@ -164,34 +164,7 @@ const UserData = () => {
                             fullWidth
                         />
 
-                        <FormControl fullWidth>
-                            <InputLabel>Sexo</InputLabel>
-                            <Select
-                                value={userData.sexo}              // <— corrigido: apenas este value
-                                label="Sexo"
-                                variant="outlined"
-                                onChange={(e) => setUserData({ ...userData, sexo: e.target.value })} // <— corrige onChange
-                                fullWidth
-                            />
-                        </FormControl>
-
-                        <TextField
-                            label="Peso (kg)"
-                            type="number"
-                            variant="outlined"
-                            value={userData.peso}
-                            onChange={(e) => setUserData({ ...userData, peso: e.target.value })}
-                            fullWidth
-                        />
-
-                        <TextField
-                            label="Altura (cm)"
-                            type="number"
-                            variant="outlined"
-                            value={userData.altura}
-                            onChange={(e) => setUserData({ ...userData, altura: e.target.value })}
-                            fullWidth
-                        />
+                        
 
                         <FormControl fullWidth>
                             <InputLabel>Sexo</InputLabel>
