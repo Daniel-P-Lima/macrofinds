@@ -8,7 +8,7 @@ import {
   Stack,
 } from "@mui/material";
 import "typeface-inter";
-import "../../assets/login.css"; // Caso ainda queira quaisquer estilos complementares
+import "../../assets/login.css"; 
 
 export default function Login() {
   return (
@@ -23,7 +23,9 @@ export default function Login() {
           alignItems: "center",
           px: 1,
         }}
+        
       >
+      
         <Stack spacing={3} sx={{ width: "100%", maxWidth: 440 }}>
           <Typography variant="h4" textAlign="center">
             MacroFinds
@@ -35,6 +37,7 @@ export default function Login() {
             variant="outlined"
             fullWidth
             autoFocus
+            InputProps={{ className: "input-field" }}
           />
 
           <TextField
@@ -42,9 +45,11 @@ export default function Login() {
             type="password"
             variant="outlined"
             fullWidth
+            InputProps={{ className: "input-field" }} 
           />
 
           <Button
+            className="btn-login"
             variant="contained"
             color="primary"
             size="large"
@@ -63,6 +68,7 @@ export default function Login() {
           <Divider>ou</Divider>
 
           <Button
+            className="btn-google"
             variant="outlined"
             fullWidth
             size="large"
