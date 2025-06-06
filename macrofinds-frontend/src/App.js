@@ -11,6 +11,7 @@ function App() {
     <div className="app">
       <Router>
         <Routes>
+          
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<Main/>}></Route>
           <Route path="/dadosUsuario" element={<UserData/>}></Route>

@@ -1,59 +1,80 @@
-import { useEffect } from "react";
-import "../../assets/login.css";   
+import React from "react";
+import {
+  Box,
+  TextField,
+  Button,
+  Typography,
+  Divider,
+  Stack,
+} from "@mui/material";
 import "typeface-inter";
+import "../../assets/login.css"; // Caso ainda queira quaisquer estilos complementares
 
 export default function Login() {
-  useEffect(() => {
-    M.AutoInit();
-  }, []);
-
   return (
     <>
-      
       <hr className="full-hr" />
 
-     
-      <div className="login-wrapper">
-        <div className="login-card">
-          <h1 className="login-title">MacroFinds</h1>
+      <Box
+        sx={{
+          minHeight: "75vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          px: 1,
+        }}
+      >
+        <Stack spacing={3} sx={{ width: "100%", maxWidth: 440 }}>
+          <Typography variant="h4" textAlign="center">
+            MacroFinds
+          </Typography>
 
-          <form>
-            <div className="input-field">
-              <input id="email" type="email" className="validate" />
-              <label htmlFor="email">email</label>
-            </div>
+          <TextField
+            label="email"
+            type="email"
+            variant="outlined"
+            fullWidth
+            autoFocus
+          />
 
-            <div className="input-field">
-              <input id="senha" type="password" className="validate" />
-              <label htmlFor="senha">senha</label>
-            </div>
+          <TextField
+            label="senha"
+            type="password"
+            variant="outlined"
+            fullWidth
+          />
 
-            <button
-              type="submit"
-              className="btn btn-login waves-effect waves-light"
-            >
-              Login
-            </button>
-          </form>
+          <Button
+            variant="contained"
+            color="primary"
+            size="large"
+            fullWidth
+          >
+            Login
+          </Button>
 
-          <p style={{ textAlign: "center", marginTop: "1rem" }}>
-            Novo aqui? <a href="/register">Registre-se</a>
-          </p>
+          <Typography textAlign="center" sx={{ mt: 1 }}>
+            Novo aqui? 
+            <a href="/register" style={{ textDecoration: "none", color: "#1a73e8" }}>
+              Registre-se
+            </a>
+          </Typography>
 
-      
-          <div className="divider-wrapper">
-            <div className="divider-line"></div>
-            <span>ou</span>
-            <div className="divider-line"></div>
-          </div>
+          <Divider>ou</Divider>
 
-
-          <button className="btn btn-google z-depth-0">
-            <span style={{ fontWeight: 700 }}>G</span>
+          <Button
+            variant="outlined"
+            fullWidth
+            size="large"
+            sx={{ textTransform: "none", fontSize: 20, fontWeight: 400 }}
+            startIcon={
+              <Typography sx={{ fontSize: 25, fontWeight: 600 }}>G</Typography>
+            }
+          >
             Continuar com o Google
-          </button>
-        </div>
-      </div>
+          </Button>
+        </Stack>
+      </Box>
 
       <hr className="full-hr" />
     </>

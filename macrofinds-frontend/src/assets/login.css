@@ -1,169 +1,57 @@
-/* ===================================================
-   TIPOGRAFIA GLOBAL
-   ===================================================
-   ‣ A fonte Inter foi instalada via `npm i typeface-inter`
-   ‣ Como fallback deixamos Source Sans Pro e genérico sans-serif
-   --------------------------------------------------- */
-body {
-  font-family: "Inter", "Source Sans Pro", sans-serif;
-}
-
-/* ===================================================
-   ESTRUTURA GERAL DO LOGIN
-   =================================================== */
-/* Contêiner flex: centraliza verticalmente o cartão */
+/* login.css */
 .login-wrapper {
-  min-height: 75vh;          /* ocupa 75 % da viewport (ajuste fino)   */
+  min-height: 75vh;
   display: flex;
-  flex-direction: column;
-  justify-content: center;   /* centro vertical                        */
-  align-items: center;       /* centro horizontal                      */
-  padding-inline: 1rem;      /* respiro lateral em telas estreitas     */
+  justify-content: center;
+  align-items: center;
+  padding-inline: 1rem;
 }
 
-/* “Cartão” do formulário — largura máxima do mock (440 px) */
 .login-card {
   width: 100%;
   max-width: 440px;
 }
 
-/* Linhas pretas (superior e inferior) — mero detalhe estético */
-hr.full-hr {
-  width: 70%;               /* levemente menor que a viewport inteira */
+.full-hr {
+  width: 70%;
   height: 2px;
-  border: none;
   background: #000;
   margin-block: 2.5rem;
 }
 
-/* ===================================================
-   TÍTULO
-   =================================================== */
-h1.login-title {
-  font-size: 2rem;           /* ≅ 32 px                                 */
-  font-weight: 700;          /* Inter Bold                              */
+.login-title {
+  font-size: 2rem;
+  font-weight: 700;
   text-align: center;
   margin-bottom: 2rem;
 }
 
-/* ===================================================
-   CAMPOS DE TEXTO
-   =================================================== */
-/* Estiliza <input>; o texto “Email / Senha” vem de placeholder */
-input[type="email"],
-input[type="password"] {
+.input-field {
   width: 100%;
   height: 48px;
-  padding: 12px 24px;                    /* ← aqui o recuo maior       */
+  padding: 12px 24px;
   font-size: 18px;
-  border: 2px solid #C6C6C6 !important;
-  border-radius: 8px !important;
+  border: 2px solid #C6C6C6;
+  border-radius: 15px;
   outline: none;
+  margin-bottom: 1rem;
 }
 
-/* foco */
-input[type="email"]:focus,
-input[type="password"]:focus {
-  border-color: #000 !important;
-  box-shadow: none !important;
+.input-field:focus {
+  border-color: #000;
+  box-shadow: none;
 }
 
-/* ----------  Ajusta a posição das <label>  ---------- */
-.input-field > label {                   /* label “em repouso”          */
-  left: 18px !important;                 /* acompanha padding-left      */
-}
-
-.input-field > label.active {            /* label “flutuante”           */
-  /* posição original: translateY(-14px) scale(.8)
-     precisamos compensar os 24 px de deslocamento ⤵︎ */
-  transform: translate(-14px, -14px) scale(0.8) !important;
-}
-
-/* ===================================================
-   BOTÃO “Login”
-   =================================================== */
 .btn-login {
-  background: #404040 !important;      /* cinza escuro                   */
-  color: #fff !important;
+  background: #404040;
+  color: #fff;
   width: 100%;
   height: 48px;
-  line-height: 48px;                   /* centraliza texto verticalmente */
-  border-radius: 8px;
-  font-size: 20px;                     /* Inter Regular 25 px            */
-  font-weight: 400;
-  text-transform: none;                /* mantém capitalização           */
-  margin-top: 1.5rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18); /* leve depth               */
-}
-
-/* ===================================================
-   BOTÃO “Continuar com o Google”
-   =================================================== */
-.btn-google {
-  background: #fff !important;
-  color: #404040 !important;
-  border: 2px solid #F0F2F2 !important;
-  width: 100%;
-  height: 48px;
-  line-height: 48px;
-  border-radius: 8px;
-  display: flex;                        /* ícone + texto alinhados        */
-  align-items: center;
-  justify-content: center;
-  gap: 8px;                             /* espaço entre “G” e texto       */
-  font-size: 20px;                      /* Inter Regular 25 px            */
+  border-radius: 15px;
+  font-size: 20px;
   font-weight: 400;
   text-transform: none;
-  margin-top: 2rem;
+  margin-top: 1.5rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
 }
 
-/* Letra/ícone “G” fica um pouquinho mais forte */
-.btn-google span:first-child {
-  font-size: 25px;
-  font-weight: 600;
-}
-
-/* Remove sombras azuis/roxas de foco do Materialize */
-.btn:focus,
-.btn:active {
-  box-shadow: none !important;
-}
-
-/* ===================================================
-   SEÇÃO “ou” COM TRACINHOS
-   =================================================== */
-/* Wrapper horizontal que contém as linhas e o texto “ou” */
-.divider-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 12px;               /* distância entre texto e linha           */
-  margin: 1.5rem 0 1.8rem; /* espaço antes do Google/Registrar-se     */
-}
-
-/* Cada linha ocupa o espaço flexível restante */
-.divider-line {
-  flex: 1;
-  height: 1px;
-  background: #000;
-}
-
-/* Texto “ou” propriamente dito */
-.divider-wrapper span {
-  font-size: 14px;
-  color: #6B6B6B;
-  line-height: 1;
-  user-select: none;       /* evita seleção acidental                 */
-}
-
-/* ===================================================
-   LINK “Registrar-se”
-   =================================================== */
-.login-card a {
-  color: #1a73e8;          /* azul padrão links Material Design       */
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.login-card a:hover {
-  text-decoration: underline;
-}
