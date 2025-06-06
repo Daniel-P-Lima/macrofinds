@@ -8,15 +8,16 @@ import { DndContext } from "@dnd-kit/core"
 export default function Main(){
   const [dietInfo, setDietInfo] = useState([]);
   const [foodInfo, setFoodInfo] = useState([]);
+  const [draggingElement, setDraggingElement] = useState(null);
 
   useEffect(() => {
     setDietInfo([{name: "Dieta 1",
                   price: "24,00",
-                  food: [0, 1, 2, 3]
+                  food: [{id: 0, amount: 150}, {id: 1, amount: 100}, {id: 2, amount: 30}, {id: 3, amount: 200}]
                  },
                  {name: "Dieta 2",
                   price: "5,00",
-                  food: [1]
+                  food: [{id: 1, amount: 150}]
                  }])
   }, []);
   
@@ -33,11 +34,11 @@ export default function Main(){
     if(!over) return
 
     const overName = over.id
-    const newFood = active.id
+    const newFood = {id: active.id, amount: 0}
 
     setDietInfo(() =>
       dietInfo.map((diet) => 
-        diet.name === overName && diet.food.length < 9 && !diet.food.includes(newFood)
+        diet.name === overName && diet.food.length < 9 && !diet.food.some((food) => food.id === newFood.id)
           ? {
               ...diet,
               food: [...diet.food, newFood]
@@ -45,6 +46,18 @@ export default function Main(){
           : diet
       )
     )
+
+    setDraggingElement(null)
+  }
+
+  function handleDragOver(event){
+    const {active, over} = event
+
+    setDraggingElement(null)
+
+    if(!over) return
+
+    setDraggingElement(active.id)
   }
 
   function removeFoodFromDiet(dietName, foodId){
@@ -53,7 +66,27 @@ export default function Main(){
         diet.name === dietName
           ? {
               ...diet,
-              food: diet.food.filter(id => id !== foodId)
+              food: diet.food.filter(food => food.id !== foodId)
+            }
+          : diet
+      )
+    )
+  }
+
+  function setFoodAmount(dietName, foodId, newAmount){
+    setDietInfo(() =>
+      dietInfo.map((diet) => 
+        diet.name === dietName
+          ? {
+              ...diet,
+              food: diet.food.map(food =>
+                food.id === foodId
+                ? {
+                    ...food,
+                    amount: newAmount
+                  }
+                : food
+              )
             }
           : diet
       )
@@ -66,15 +99,15 @@ export default function Main(){
         <Navbar />
       </div>
 
-      <DndContext onDragEnd={handleDragEnd}>
+      <DndContext onDragEnd={handleDragEnd} onDragOver={handleDragOver}>
         <div className='column mid-column'>
           <div className='dietas-box'>
-            <header className='header'>
-              <h5><strong> Dietas </strong></h5>
+            <header className='dietas-box-header'>
+              <strong> Dietas </strong>
             </header>
             <div>
               {dietInfo.map((dieta) =>
-                <Section dieta={dieta} foodInfo={foodInfo} remove={removeFoodFromDiet} />
+                <Section dieta={dieta} foodInfo={foodInfo} remove={removeFoodFromDiet} setAmount={setFoodAmount} draggingElement={draggingElement} />
               )}
             </div>
           </div>
@@ -82,8 +115,8 @@ export default function Main(){
 
         <div className='column right-column'>
           <div className='dietas-box'>
-            <header className='header'>
-              <h5><strong> Alimentos </strong></h5>
+            <header className='dietas-box-header'>
+              <strong> Alimentos </strong>
             </header>
             <div className='right-column-content'>
               {foodInfo.map((food) =>

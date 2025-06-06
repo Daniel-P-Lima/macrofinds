@@ -1,10 +1,10 @@
 import Content from "./Content"
 
-export default function Section({dieta, foodInfo, remove}){
+export default function Section({dieta, foodInfo, remove, setAmount, draggingElement}){
     return(
         <div className='section dietas-box'>
             <div className='left-section'>
-                <h6 className='no-margin'><strong> {dieta.name} </strong></h6>
+                <strong> {dieta.name} </strong>
                 <p className='no-margin'> R$ {dieta.price} </p>
                 <div className='left-section-values'>
                 <div className='value-box dietas-box'>
@@ -18,7 +18,7 @@ export default function Section({dieta, foodInfo, remove}){
                 </div>
                 </div>
             </div>
-            <Content name={dieta.name} dietFoodList={dieta.food} foodInfo={foodInfo} remove={remove} />
+            <Content name={dieta.name} dietFoodList={dieta.food} foodInfo={foodInfo} remove={remove} setAmount={setAmount} draggingElement={draggingElement} />
         </div>
     )
 }

@@ -105,7 +105,6 @@ export default function Navbar() {
           sx={{
             display: { xs: 'none', md: 'block' },
             '& .MuiDrawer-paper': {
-              width: drawerWidth,
               boxSizing: 'border-box',
               background: 'linear-gradient(180deg, #d9ffd4)'
             }

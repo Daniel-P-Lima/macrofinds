@@ -15,7 +15,6 @@ export default function DraggableFood({food}){
             <div className='food-left'>
                 <p className="food-left-top">{food.name}</p>
                 <div className='food-left-bot'>
-                <input id={food.id} type="text" className='dietas-box'/> <p>{food.unit}</p>
                 </div>
             </div>
             <div className='food-right'>
