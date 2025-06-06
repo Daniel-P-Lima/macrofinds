@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import M from "materialize-css";
 import "../../assets/login.css";   
 import "typeface-inter";
 
