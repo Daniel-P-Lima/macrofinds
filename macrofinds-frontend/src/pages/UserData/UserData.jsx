@@ -40,7 +40,11 @@ const UserData = () => {
                     tmb_usuario: data.tmb_usuario || ''
                 });
 
-                if (data.tmb_usuario !== null && data.tmb_usuario !== undefined && data.tmb_usuario !== '') {
+                if (
+                    data.tmb_usuario !== null &&
+                    data.tmb_usuario !== undefined &&
+                    data.tmb_usuario !== ''
+                ) {
                     const valor = parseFloat(data.tmb_usuario).toFixed(2);
                     setTmb(valor);
                     console.log("TMB carregada do banco:", valor);
@@ -60,9 +64,9 @@ const UserData = () => {
 
         let resultado = 0;
         if (userData.sexo === 'Masculino') {
-            resultado = 66 + (13.7 * peso) + (5 * altura) - (6.8 * idade);
+            resultado = 66 + 13.7 * peso + 5 * altura - 6.8 * idade;
         } else if (userData.sexo === 'Feminino') {
-            resultado = 655 + (9.6 * peso) + (1.7 * altura) - (4.7 * idade);
+            resultado = 655 + 9.6 * peso + 1.7 * altura - 4.7 * idade;
         }
 
         let fator = 1;
@@ -163,76 +167,77 @@ const UserData = () => {
                         <FormControl fullWidth>
                             <InputLabel>Sexo</InputLabel>
                             <Select
+                                value={userData.sexo}              // <— corrigido: apenas este value
+                                label="Sexo"
+                                variant="outlined"
+                                onChange={(e) => setUserData({ ...userData, sexo: e.target.value })} // <— corrige onChange
+                                fullWidth
+                            />
+                        </FormControl>
+
+                        <TextField
+                            label="Peso (kg)"
+                            type="number"
+                            variant="outlined"
+                            value={userData.peso}
+                            onChange={(e) => setUserData({ ...userData, peso: e.target.value })}
+                            fullWidth
+                        />
+
+                        <TextField
+                            label="Altura (cm)"
+                            type="number"
+                            variant="outlined"
+                            value={userData.altura}
+                            onChange={(e) => setUserData({ ...userData, altura: e.target.value })}
+                            fullWidth
+                        />
+
+                        <FormControl fullWidth>
+                            <InputLabel>Sexo</InputLabel>
+                            <Select
                                 value={userData.sexo}
                                 label="Sexo"
                                 variant="outlined"
-                                value={userData.idade}
-                                onChange={(e) => setUserData({ ...userData, idade: e.target.value })}
+                                onChange={(e) => setUserData({ ...userData, sexo: e.target.value })}
                                 fullWidth
-                            />
+                            >
+                                <MenuItem value="Masculino">Masculino</MenuItem>
+                                <MenuItem value="Feminino">Feminino</MenuItem>
+                            </Select>
+                        </FormControl>
 
-                            <TextField
-                                label="Peso (kg)"
-                                type="number"
+                        <FormControl fullWidth>
+                            <InputLabel>Intensidade</InputLabel>
+                            <Select
+                                value={userData.intensidade}
+                                label="Intensidade"
                                 variant="outlined"
-                                value={userData.peso}
-                                onChange={(e) => setUserData({ ...userData, peso: e.target.value })}
+                                onChange={(e) => setUserData({ ...userData, intensidade: e.target.value })}
                                 fullWidth
+                            >
+                                <MenuItem value="N">Normal</MenuItem>
+                                <MenuItem value="M">Moderada</MenuItem>
+                                <MenuItem value="I">Intensa</MenuItem>
+                            </Select>
+                        </FormControl>
+
+                        <FormGroup>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={salvarTmb}
+                                        onChange={(e) => setSalvarTmb(e.target.checked)}
+                                    />
+                                }
+                                label="Salvar TMB"
                             />
+                        </FormGroup>
 
-                            <TextField
-                                label="Altura (cm)"
-                                type="number"
-                                variant="outlined"
-                                value={userData.altura}
-                                onChange={(e) => setUserData({ ...userData, altura: e.target.value })}
-                                fullWidth
-                            />
-
-                            <FormControl fullWidth>
-                                <InputLabel>Sexo</InputLabel>
-                                <Select
-                                    value={userData.sexo}
-                                    label="Sexo"
-                                    variant="outlined"
-                                    onChange={(e) => setUserData({ ...userData, sexo: e.target.value })}
-                                >
-                                    <MenuItem value="Masculino">Masculino</MenuItem>
-                                    <MenuItem value="Feminino">Feminino</MenuItem>
-                                </Select>
-                            </FormControl>
-
-                            <FormControl fullWidth>
-                                <InputLabel>Intensidade</InputLabel>
-                                <Select
-                                    value={userData.intensidade}
-                                    label="Intensidade"
-                                    variant="outlined"
-                                    onChange={(e) => setUserData({ ...userData, intensidade: e.target.value })}
-                                >
-                                    <MenuItem value="N">Normal</MenuItem>
-                                    <MenuItem value="M">Moderada</MenuItem>
-                                    <MenuItem value="I">Intensa</MenuItem>
-                                </Select>
-                            </FormControl>
-
-                            <FormGroup>
-                                <FormControlLabel
-                                    control={
-                                        <Checkbox
-                                            checked={salvarTmb}
-                                            onChange={(e) => setSalvarTmb(e.target.checked)}
-                                        />
-                                    }
-                                    label="Salvar TMB"
-                                />
-                            </FormGroup>
-
-                            <Button variant="contained" color="primary" onClick={calcularTmb}>
-                                Calcular
-                            </Button>
-                        </Box>
-                    </div>
+                        <Button variant="contained" color="primary" onClick={calcularTmb}>
+                            Calcular
+                        </Button>
+                    </Box>
                 </div>
             </div>
         </div>
