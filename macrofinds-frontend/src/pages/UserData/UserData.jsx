@@ -26,6 +26,8 @@ const UserData = () => {
     });
     const [salvarTmb, setSalvarTmb] = useState(true);
     const [tmb, setTmb] = useState('');
+    const [proteinas, setProteinas] = useState('');
+    const [carboidratos, setCarboidratos] = useState('');
 
     useEffect(() => {
         fetch('http://localhost:5000/usuario/1')
@@ -77,6 +79,21 @@ const UserData = () => {
         const tmbFinal = resultado * fator;
         setTmb(tmbFinal.toFixed(2));
 
+        //prot e carbos calculo de acordo com o objetivo
+        if (userData.objetivo === 'Bulking') {
+            proteinas = (peso * 2.2); // 2.2g por kg de peso
+            carboidratos = (peso * 5); // 5g por kg de peso
+        } else if (userData.objetivo === 'Cutting') {
+            proteinas = (peso * 2.5); // 2.5g por kg de peso
+            carboidratos = (peso * 3); // 3g por kg de peso
+        } else if (userData.objetivo === 'Manutenção') {
+            proteinas = (peso * 2); // 2g por kg de peso
+            carboidratos = (peso * 4); // 4g por kg de peso
+        }
+
+        setProteinas(proteinas.toFixed(2));
+        setCarboidratos(carboidratos.toFixed(2));
+
         if (salvarTmb) {
             fetch("http://localhost:5000/usuario/1", {
                 method: "POST",
@@ -87,7 +104,9 @@ const UserData = () => {
                     sexo: userData.sexo,
                     intensidade: userData.intensidade,
                     idade: parseInt(userData.idade, 10),
-                    tmb: parseFloat(tmbFinal.toFixed(2))
+                    tmb: parseFloat(tmbFinal.toFixed(2)),
+                    proteinas: proteinas.toFixed(2),
+                    carboidratos: carboidratos.toFixed(2)
                 })
             })
                 .then(async (res) => {
@@ -122,6 +141,24 @@ const UserData = () => {
                         <Typography variant="body1">
                             Baseado no seu peso, altura, sexo, idade e intensidade de atividade física
                         </Typography>
+
+                        <div className="macros-container">
+                            <div className="macro-item">
+                                <Typography variant="body1" fontWeight="bold">Proteínas</Typography>
+                                <img src="/proteins.png" alt="Proteínas" />
+                                <Typography className="macro-amount">
+                                    {proteinas ? `${proteinas} g/dia` : '---'}
+                                </Typography>
+                            </div>
+
+                            <div className="macro-item">
+                                <Typography variant="body1" fontWeight="bold">Carboidratos</Typography>
+                                <img src="/carbohydrates.png" alt="Carboidratos" />
+                                <Typography className="macro-amount">
+                                    {carboidratos ? `${carboidratos} g/dia` : '---'}
+                                </Typography>
+                            </div>
+                        </div>
 
                         <Box
                             component="form"
