@@ -97,7 +97,7 @@ export default function Main(){
         calcCarboidratos = peso * 4; // 4g por kg de peso
     }
 
-    setNeededConsumption([tmbFinal, calcProteinas, calcCarboidratos]);
+    setNeededConsumption([tmbFinal, calcCarboidratos, calcProteinas]);
   }, [userData]);
 
   function colorByPercentage(value, total){
@@ -231,8 +231,8 @@ export default function Main(){
 
               {dietInfo.length > 0 && <div className='dietas-box-header-mid'>
                 <div className='value-box dietas-box' style={{backgroundColor: colorByPercentage(dietInfo[selectedDiet].plates.reduce((a, v) => a += v.food.reduce((a, v) => a += foodInfo[v.id].cal * v.amount, 0), 0), neededConsumption[0])}}> Calorias </div>
-                <div className='value-box dietas-box' style={{backgroundColor: colorByPercentage(dietInfo[selectedDiet].plates.reduce((a, v) => a += v.food.reduce((a, v) => a += foodInfo[v.id].carb * v.amount, 0), 0), neededConsumption[0])}}> Carboidratos </div>
-                <div className='value-box dietas-box' style={{backgroundColor: colorByPercentage(dietInfo[selectedDiet].plates.reduce((a, v) => a += v.food.reduce((a, v) => a += foodInfo[v.id].prot * v.amount, 0), 0), neededConsumption[0])}}> Proteínas </div>
+                <div className='value-box dietas-box' style={{backgroundColor: colorByPercentage(dietInfo[selectedDiet].plates.reduce((a, v) => a += v.food.reduce((a, v) => a += foodInfo[v.id].carb * v.amount, 0), 0), neededConsumption[1])}}> Carboidratos </div>
+                <div className='value-box dietas-box' style={{backgroundColor: colorByPercentage(dietInfo[selectedDiet].plates.reduce((a, v) => a += v.food.reduce((a, v) => a += foodInfo[v.id].prot * v.amount, 0), 0), neededConsumption[2])}}> Proteínas </div>
               </div>}
               
               <div className='dietas-box-header-right'>
