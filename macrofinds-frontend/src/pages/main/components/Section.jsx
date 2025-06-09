@@ -1,24 +1,30 @@
-import Content from "./Content"
+import { useDroppable } from "@dnd-kit/core"
+import Food from "./Food"
 
-export default function Section({dieta, foodInfo, remove, setAmount, draggingElement}){
+export default function Section({ref, foodInfo, remove, setAmount, draggingElement}){
+    const {isOver, setNodeRef} = useDroppable({
+        id: ref.name
+    })
+
+    const style = {
+        display: isOver && ref.food.length < 9 && !ref.food.some(food => food.id === draggingElement) ? "block" : "none"
+    }
+
     return(
         <div className='section dietas-box'>
             <div className='left-section'>
-                <strong> {dieta.name} </strong>
-                <p className='no-margin'> R$ {dieta.price} </p>
+                <strong> {ref.name} </strong>
+                <p className='no-margin'> R$ {parseFloat(ref.food.reduce((a, v) => a += foodInfo[v.id].price * v.amount, 0)).toFixed(2).replace(".", ",")} </p>
                 <div className='left-section-values'>
-                <div className='value-box dietas-box'>
-                    <div className='value-box-circle'></div> <p className="no-margin">Calorias</p>
-                </div>
-                <div className='value-box dietas-box'>
-                    <div className='value-box-circle'></div> <p className="no-margin">Carboidratos</p>
-                </div>
-                <div className='value-box dietas-box'>
-                    <div className='value-box-circle'></div> <p className="no-margin">Proteínas</p>
-                </div>
+                
                 </div>
             </div>
-            <Content name={dieta.name} dietFoodList={dieta.food} foodInfo={foodInfo} remove={remove} setAmount={setAmount} draggingElement={draggingElement} />
+            <div className='right-section' ref={setNodeRef}>
+                {ref.food.map((food) => 
+                    <Food amount={food.amount} food={foodInfo[food.id]} remove={remove} dietName={ref.name} setAmount={setAmount} isOver={isOver} draggingElement={draggingElement} />
+                )}
+                <div className="lastFood" style={style}></div>
+            </div>
         </div>
     )
 }
