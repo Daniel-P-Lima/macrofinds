@@ -26,6 +26,8 @@ const UserData = () => {
     });
     const [salvarTmb, setSalvarTmb] = useState(true);
     const [tmb, setTmb] = useState('');
+    const [proteinas, setProteinas] = useState('');
+    const [carboidratos, setCarboidratos] = useState('');
 
     useEffect(() => {
         fetch('http://localhost:5000/usuario/1')
@@ -63,9 +65,9 @@ const UserData = () => {
         }
 
         let resultado = 0;
-        if (userData.sexo === 'Masculino') {
+        if (userData.sexo === 'M') {
             resultado = 66 + 13.7 * peso + 5 * altura - 6.8 * idade;
-        } else if (userData.sexo === 'Feminino') {
+        } else if (userData.sexo === 'F') {
             resultado = 655 + 9.6 * peso + 1.7 * altura - 4.7 * idade;
         }
 
@@ -77,6 +79,22 @@ const UserData = () => {
         const tmbFinal = resultado * fator;
         setTmb(tmbFinal.toFixed(2));
 
+        let calcProteinas, calcCarboidratos;
+        //prot e carbos calculo de acordo com o objetivo
+        if (userData.objetivo === 'B') {
+            calcProteinas = peso * 2.2; // 2.2g por kg de peso
+            calcCarboidratos = peso * 5; // 5g por kg de peso
+        } else if (userData.objetivo === 'C') {
+            calcProteinas = peso * 2.5; // 2.5g por kg de peso
+            calcCarboidratos = peso * 3; // 3g por kg de peso
+        } else if (userData.objetivo === 'M') {
+            calcProteinas = peso * 2; // 2g por kg de peso
+            calcCarboidratos = peso * 4; // 4g por kg de peso
+        }
+
+        setProteinas(calcProteinas.toFixed(2));
+        setCarboidratos(calcCarboidratos.toFixed(2));
+
         if (salvarTmb) {
             fetch("http://localhost:5000/usuario/1", {
                 method: "POST",
@@ -87,7 +105,9 @@ const UserData = () => {
                     sexo: userData.sexo,
                     intensidade: userData.intensidade,
                     idade: parseInt(userData.idade, 10),
-                    tmb: parseFloat(tmbFinal.toFixed(2))
+                    tmb: parseFloat(tmbFinal.toFixed(2)),
+                    proteinas: proteinas.toFixed(2),
+                    carboidratos: carboidratos.toFixed(2)
                 })
             })
                 .then(async (res) => {
@@ -122,6 +142,24 @@ const UserData = () => {
                         <Typography variant="body1">
                             Baseado no seu peso, altura, sexo, idade e intensidade de atividade física
                         </Typography>
+
+                        <div className="macros-container">
+                            <div className="macro-item">
+                                <Typography variant="body1" fontWeight="bold">Proteínas</Typography>
+                                <img src="/proteins.png" alt="Proteínas" />
+                                <Typography className="macro-amount">
+                                    {proteinas ? `${proteinas} g/dia` : '---'}
+                                </Typography>
+                            </div>
+
+                            <div className="macro-item">
+                                <Typography variant="body1" fontWeight="bold">Carboidratos</Typography>
+                                <img src="/carbohydrates.png" alt="Carboidratos" />
+                                <Typography className="macro-amount">
+                                    {carboidratos ? `${carboidratos} g/dia` : '---'}
+                                </Typography>
+                            </div>
+                        </div>
 
                         <Box
                             component="form"
@@ -176,8 +214,8 @@ const UserData = () => {
                                     onChange={(e) => setUserData({ ...userData, sexo: e.target.value })}
                                     fullWidth
                                 >
-                                    <MenuItem value="Masculino">Masculino</MenuItem>
-                                    <MenuItem value="Feminino">Feminino</MenuItem>
+                                    <MenuItem value="M">Masculino</MenuItem>
+                                    <MenuItem value="F">Feminino</MenuItem>
                                 </Select>
                             </FormControl>
 
@@ -193,6 +231,20 @@ const UserData = () => {
                                     <MenuItem value="N">Normal</MenuItem>
                                     <MenuItem value="M">Moderada</MenuItem>
                                     <MenuItem value="I">Intensa</MenuItem>
+                                </Select>
+                            </FormControl>
+
+                            <FormControl fullWidth>
+                                <InputLabel>Objetivo</InputLabel>
+                                <Select
+                                    value={userData.objetivo}
+                                    label="Objetivo"
+                                    variant="outlined"
+                                    onChange={(e) => setUserData({ ...userData, objetivo: e.target.value })}
+                                >
+                                    <MenuItem value="B">Bulking</MenuItem>
+                                    <MenuItem value="C">Cutting</MenuItem>
+                                    <MenuItem value="M">Manutenção</MenuItem>
                                 </Select>
                             </FormControl>
 

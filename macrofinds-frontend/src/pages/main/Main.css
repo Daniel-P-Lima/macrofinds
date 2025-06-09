@@ -32,10 +32,41 @@
 }
 
 .dietas-box-header{
-    padding: 16px 0;
-    padding-left: 16px;
+    display: flex;
+    gap: 10px;
+    padding: 16px 20px;
     border-bottom: 1px solid #D9D9D9;
     font-size: 1.25em;
+}
+
+.dietas-box-header-left{
+    flex: 0 0 fit-content;
+}
+
+.dietas-box-header-mid{
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+}
+
+.dietas-box-header-right{
+    flex: 0 0 fit-content;
+    text-align: right;
+    align-content: center;
+}
+
+.value-box{
+    display: flex;
+    flex: 0 0 100px;
+    padding: 8px 12px;
+    gap: 10px;
+    font-size: small;
+    height: fit-content;
+    justify-content: center;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
 }
 
 .section{
@@ -65,27 +96,6 @@
 .left-section-values{
     display: flex;
     gap: 10px;
-}
-
-.value-box{
-    display: flex;
-    flex: 1 1 auto;
-    padding: 4px 6px;
-    gap: 10px;
-    font-size: small;
-}
-
-.value-box-circle{
-    aspect-ratio: 1 / 1;
-    height: 90%;
-    width: auto;
-
-    background-color: rgb(0, 236, 0);
-    border: 1px solid green ;
-    border-radius: 50%;
-
-    -webkit-transition: 0.5s;
-    transition: 0.5s;
 }
 
 .right-section{
@@ -209,14 +219,22 @@
     gap: 6px;
 }
 
-/*@media only screen and (max-width: 1595px){
-    .right-column-content{
-        grid-template-columns: repeat(1, 1fr);
+@media only screen and (max-width: 1535px){
+    .left-section{
+        width: 40%;
+    }
+
+    .right-section{
+        width: 60%;
     }
 }
 
-@media only screen and (max-width: 1280px){
+@media only screen and (max-width: 1095px){
     .right-section{
         grid-template-columns: repeat(2, 1fr);
     }
-}*/
+
+    .right-column-content{
+        grid-template-columns: 1fr;
+    }
+}
