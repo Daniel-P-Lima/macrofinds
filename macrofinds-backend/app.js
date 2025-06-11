@@ -12,18 +12,99 @@ app.use(express.json());
 
 app.get("/", (_, res) => res.send("API rodando"));
 
-/* Lista todas as dietas */
-app.get("/dietas", async (_, res) => {
+app.get("/foods", async (_, res) => {
+  const foods = await prisma.food.findMany();
+  res.json(foods);
+});
+
+app.post("/foods", async (req, res) => {
+  const { name, unit, price, cal, prot, carb } = req.body;
   try {
-    const dietas = await prisma.dietas.findMany();
-    res.json(dietas);
+    const food = await prisma.food.create({
+      data: { name, unit, price, cal, prot, carb }
+    });
+    res.status(201).json(food);
   } catch (err) {
-    console.error(err);
-    res.status(500).send(err);
+    console.error("Erro ao criar alimento:", err);
+    res.status(500).json({ error: "Falha ao criar alimento" });
   }
 });
 
-/* Busca dados para cálculo de TMB */
+app.get("/dietas", async (req, res) => {
+  try {
+    const dietas = await prisma.diet.findMany({
+      include: {
+        plates: {
+          include: {
+            foods: { 
+              include: {
+                food: true
+              }
+            }
+          }
+        }
+      }
+    });
+    res.json(dietas);
+  } catch (err) {
+    console.error("Erro ao buscar dietas:", err);
+    res.status(500).json({ error: "Falha ao buscar dietas" });
+  }
+});
+
+app.post("/dietas", async (req, res) => {
+  const { name, objective, userId } = req.body;
+  const dieta = await prisma.diet.create({
+    data: { name, objective, userId }
+  });
+  res.json(dieta);
+});
+
+app.post("/dietas/:dietId/plates", async (req, res) => {
+  const { name } = req.body;
+  const plate = await prisma.plate.create({
+    data: { name, dietId: Number(req.params.dietId) }
+  });
+  res.json(plate);
+});
+
+app.post("/plates/:plateId/foods", async (req, res) => {
+  const { foodId, amount } = req.body;
+  const plateFood = await prisma.plateFood.create({
+    data: {
+      plateId: Number(req.params.plateId),
+      foodId,
+      amount
+    }
+  });
+  res.json(plateFood);
+});
+
+app.put("/plates/:plateId/foods/:foodId", async (req, res) => {
+  const { amount } = req.body;
+  const updated = await prisma.plateFood.update({
+    where: {
+      plateId_foodId: {
+        plateId: Number(req.params.plateId),
+        foodId: Number(req.params.foodId)
+      }
+    },
+    data: { amount }
+  });
+  res.json(updated);
+});
+
+app.delete("/plates/:plateId/foods/:foodId", async (req, res) => {
+  await prisma.plateFood.delete({
+    where: {
+      plateId_foodId: {
+        plateId: Number(req.params.plateId),
+        foodId: Number(req.params.foodId)
+      }
+    }
+  });
+  res.json({ ok: true });
+});
 app.get("/usuario/:id_usuario", async (req, res) => {
   try {
     const usuario = await prisma.usuarios.findUnique({
@@ -56,7 +137,6 @@ app.post("/usuario/:id_usuario", async (req, res) => {
     tmb              // opcional
   } = req.body;
 
-  // monta objeto só com o que veio preenchido
   const data = {};
   if (peso        !== undefined) data.peso_usuario     = peso;
   if (altura      !== undefined) data.altura_usuario   = altura;
@@ -77,7 +157,6 @@ app.post("/usuario/:id_usuario", async (req, res) => {
   }
 });
 
-/* Atualiza TMB do usuário */
 app.post("/usuario/salvarTmb/:id_usuario", async (req, res) => {
   const { tmb } = req.body;
   if (tmb == null)

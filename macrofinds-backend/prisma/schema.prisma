@@ -1,3 +1,5 @@
+// schema.prisma
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -7,49 +9,70 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model dietas {
-  id_dieta               Int               @id @unique(map: "id_dieta") @default(autoincrement())
-  nome_dieta             String            @db.VarChar(255)
-  objetivo_dieta         String            @db.VarChar(255)
-  data_criacao_dieta     DateTime?         @default(now()) @db.DateTime(0)
-  data_atualizacao_dieta DateTime?         @default(now()) @db.DateTime(0)
-  fk_id_usuario          Int
-  usuarios               usuarios          @relation(fields: [fk_id_usuario], references: [id_usuario], onDelete: NoAction, onUpdate: NoAction, map: "dietas_ibfk_1")
-  usuarios_dietas        usuarios_dietas[]
-
-  @@index([fk_id_usuario], map: "fk_id_usuario")
+enum ActivityIntensity {
+  N  // Nenhuma / Sedentário
+  M  // Moderada
+  I  // Intensa
 }
 
-model usuarios {
-  id_usuario               Int                             @id @unique(map: "id_usuario") @default(autoincrement())
-  tmb_usuario              Float?                          @db.Float
-  nome_usuario             String                          @db.VarChar(255)
-  idade_usuario            Int
-  peso_usuario             Float                           @db.Float
-  altura_usuario           Float                           @db.Float
-  email_usuario            String                          @db.VarChar(255)
-  sexo_usuario             String?                         @db.VarChar(50)
-  tipo_atividade_fisica    usuarios_tipo_atividade_fisica?
-  senha_usuario            String                          @db.VarChar(255)
-  data_criacao_usuario     DateTime?                       @default(now()) @db.DateTime(0)
-  data_atualizacao_usuario DateTime?                       @default(now()) @db.DateTime(0)
-  dietas                   dietas[]
-  usuarios_dietas          usuarios_dietas[]
+model Usuario {
+  id           Int               @id @default(autoincrement()) @map("id_usuario")
+  nome         String            @map("nome_usuario")
+  email        String            @unique @map("email_usuario")
+  senha        String            @map("senha_usuario")
+  idade        Int               @map("idade_usuario")
+  peso         Float             @map("peso_usuario")
+  altura       Float             @map("altura_usuario")
+  sexo         String?           @map("sexo_usuario")
+  intensidade  ActivityIntensity @map("tipo_atividade_fisica")
+  objetivo     String            @map("objetivo_usuario")
+  tmb          Float?            @map("tmb_usuario")
+  criadoEm     DateTime          @default(now())       @map("data_criacao_usuario")
+  atualizadoEm DateTime          @updatedAt            @map("data_atualizacao_usuario")
+
+  diets        Diet[]
 }
 
-model usuarios_dietas {
-  id_usuario_dieta Int      @id @unique(map: "id_usuario_dieta") @default(autoincrement())
-  fk_id_dieta      Int
-  fk_id_usuario    Int
-  dietas           dietas   @relation(fields: [fk_id_dieta], references: [id_dieta], onDelete: NoAction, onUpdate: NoAction, map: "usuarios_dietas_ibfk_1")
-  usuarios         usuarios @relation(fields: [fk_id_usuario], references: [id_usuario], onDelete: NoAction, onUpdate: NoAction, map: "usuarios_dietas_ibfk_2")
-
-  @@index([fk_id_dieta], map: "fk_id_dieta")
-  @@index([fk_id_usuario], map: "fk_id_usuario")
+model Food {
+  id     Int         @id @default(autoincrement())
+  name   String
+  unit   String
+  price  Float
+  cal    Float
+  prot   Float
+  carb   Float
+  plates PlateFood[]
 }
 
-enum usuarios_tipo_atividade_fisica {
-  N
-  M
-  I
+model Diet {
+  id           Int       @id @default(autoincrement()) @map("id_dieta")
+  name         String    @map("nome_dieta")
+  objective    String    @map("objetivo_dieta")
+  criadoEm     DateTime  @default(now())       @map("data_criacao_dieta")
+  atualizadoEm DateTime  @updatedAt            @map("data_atualizacao_dieta")
+  userId       Int       @map("fk_id_usuario")
+  user         Usuario   @relation(fields: [userId], references: [id])
+
+  plates       Plate[]
+}
+
+model Plate {
+  id     Int         @id @default(autoincrement())
+  name   String
+  dietId Int
+  diet   Diet        @relation(fields: [dietId], references: [id])
+
+  foods  PlateFood[]
+}
+
+model PlateFood {
+  id      Int    @id @default(autoincrement())
+  plateId Int
+  foodId  Int
+  amount  Int
+
+  plate Plate @relation(fields: [plateId], references: [id])
+  food  Food  @relation(fields: [foodId], references: [id])
+
+  @@unique([plateId, foodId])
 }
