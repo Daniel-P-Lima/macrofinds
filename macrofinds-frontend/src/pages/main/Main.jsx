@@ -15,7 +15,10 @@ export default function Main(){
   const [neededConsumption, setNeededConsumption] = useState([]);
 
   useEffect(() => {
-    setDietInfo([{name: "Dieta 1",
+    fetch("http://localhost:5000/dietas")
+      .then(res => res.json())
+      .then(data => {console.log(data); setDietInfo(data)})
+    /*setDietInfo([{name: "Dieta 1",
                   plates: [{name: "Refeição 1",
                             food: [{id: 0, amount: 150}, {id: 1, amount: 100}, {id: 2, amount: 30}, {id: 3, amount: 200}]
                            },
@@ -31,12 +34,12 @@ export default function Main(){
                             food: [{id: 0, amount: 150}, {id: 1, amount: 100}, {id: 2, amount: 30}, {id: 3, amount: 200}]
                            }]
                  }
-                ])
+                ])*/
   }, []);
   
   useEffect(() => {
     setFoodInfo([{id: 0, name: "Arroz Branco", unit: "g", price: 0.07, cal: 3590, prot: 0.06, carb: 0.798},
-                 {id: 1, name: "Frango", unit: "g", price: 0.1, cal: 2390, prot: 0.27, carb: 0},
+                 {id: 1, name: "Frango", unit: "g", price: 0.1, cal: 2.39, prot: 0.27, carb: 0},
                  {id: 2, name: "Batata palha", unit: "g", price: 0.05, cal: 730, prot: 0.018, carb: 0.16},
                  {id: 3, name: "Suco de laranja", unit: "ml", price: 0.05, cal: 470, prot: 0.007, carb: 0.103}])
   }, []);

@@ -60,13 +60,36 @@ app.get("/dietas", async (_, res) => {
 });
 
 
-  app.post("/dietas", async (req, res) => {
-    const { name, objective, userId } = req.body;
-    const dieta = await prisma.diet.create({
-      data: { name, objective, userId }
+app.post("/dietas", async (req, res) => {
+  const { userId, diet } = req.body;
+
+  try {
+    const dietas = await prisma.diet.create({
+      data: { userId, diet },
+      include: {
+        plates: {
+          include: { foods: true }
+        }
+      }
     });
-    res.json(dieta);
-  });
+
+    const resultado = {
+      name: dietas.name,
+      plates: diet.plates.map(plate => ({
+        name: plate.name,
+        food: plate.foods.map(pf => ({
+          id: pf.foodId,
+          amount: pf.amount
+        }))
+      }))
+    };
+
+    res.status(201).json(resultado);
+  } catch (err) {
+    console.error("Erro ao criar dieta:", err);
+    res.status(500).json({ error: "Falha ao criar dieta" });
+  }
+});
 
   app.post("/dietas/:dietId/plates", async (req, res) => {
     const { name } = req.body;
