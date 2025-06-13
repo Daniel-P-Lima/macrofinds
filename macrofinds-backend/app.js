@@ -29,7 +29,95 @@
       res.status(500).json({ error: "Falha ao criar alimento" });
     }
   });
+app.put("/dietas", async (req, res) => {
+  const dietsPayload = req.body;
 
+  if (!Array.isArray(dietsPayload)) {
+    return res.status(400).json({ error: "Esperado um array de dietas." });
+  }
+
+  try {
+    const resultados = await prisma.$transaction(async (tx) => {
+      const outs = [];
+
+      for (const dietObj of dietsPayload) {
+        const { id, name, objective, userId, plates } = dietObj;
+
+        if (typeof id === "number") {
+          const existingPlates = await tx.plate.findMany({
+            where: { dietId: id },
+            select: { id: true },
+          });
+          const plateIds = existingPlates.map(p => p.id);
+
+          if (plateIds.length) {
+            await tx.plateFood.deleteMany({
+              where: { plateId: { in: plateIds } },
+            });
+            await tx.plate.deleteMany({
+              where: { id: { in: plateIds } },
+            });
+          }
+          const updated = await tx.diet.update({
+            where: { id },
+            data: {
+              ...(name      !== undefined && { name }),
+              ...(objective !== undefined && { objective }),
+              plates: {
+                create: plates.map(p => ({
+                  name: p.name,
+                  foods: {
+                    create: p.food.map(f => ({
+                      foodId: f.id,
+                      amount: f.amount,
+                    })),
+                  },
+                })),
+              },
+            },
+            include: {
+              plates: { include: { foods: true } },
+            },
+          });
+
+          outs.push(updated);
+
+        } else {
+          const created = await tx.diet.create({
+            data: {
+              name,
+              objective,
+              userId,
+              plates: {
+                create: plates.map(p => ({
+                  name: p.name,
+                  foods: {
+                    create: p.food.map(f => ({
+                      foodId: f.id,
+                      amount: f.amount,
+                    })),
+                  },
+                })),
+              },
+            },
+            include: {
+              plates: { include: { foods: true } },
+            },
+          });
+          outs.push(created);
+        }
+      }
+
+      return outs;
+    });
+
+    return res.json(resultados);
+
+  } catch (err) {
+    console.error("Erro ao processar dietas:", err);
+    return res.status(500).json({ error: "Falha ao processar dietas." });
+  }
+});
 app.get("/dietas", async (_, res) => {
   try {
     const dietas = await prisma.diet.findMany({
