@@ -21,25 +21,7 @@ export default function Main(){
     fetch("http://localhost:5000/dietas")
       .then(res => res.json())
       .then(data => {setDietInfo(data)}).then(console.log(dietInfo))
-    /*
-    setDietInfo([{name: "Dieta 1",
-                  plates: [{name: "Refeição 1",
-                            food: [{id: 0, amount: 150}, {id: 1, amount: 100}, {id: 2, amount: 30}, {id: 3, amount: 200}]
-                           },
-                           {name: "Refeição 2",
-                            food: [{id: 1, amount: 150}]
-                           }]
-                 },
-                 {name: "Dieta 2",
-                  plates: [{name: "Refeição 1",
-                            food: [{id: 1, amount: 100}]
-                           },
-                           {name: "Refeição 2",
-                            food: [{id: 0, amount: 150}, {id: 1, amount: 100}, {id: 2, amount: 30}, {id: 3, amount: 200}]
-                           }]
-                 }
-                ])
-                 */
+    // eslint-disable-next-line
   }, []);
   
   useEffect(() => {
@@ -207,6 +189,19 @@ export default function Main(){
     })
   }
 
+  function addRef(){
+    setDietInfo(() => 
+      dietInfo.map((diet, i) => 
+      i === selectedDiet
+      ? {
+        ...diet,
+        plates: [...diet.plates, {name: "Refeição " + (diet.plates.length + 1), food: []}]
+      } : diet
+    ))
+
+    console.log(dietInfo)
+  }
+
   return (
     <div className='dieta-main'>
       <div className='column left-column'>
@@ -245,25 +240,26 @@ export default function Main(){
                 </Box>
 
                 <div className='save-icon-container' onClick={() => {saveDiet(); setcheckIconStyle({animation: "savedDiet 2s"})}}>
-                  <img src={save} className="save-icon"></img>
-                  <img src={check} className="check-icon" style={checkIconStyle} onAnimationEnd={() => {setcheckIconStyle({})}} ></img>
+                  <img src={save} className="save-icon" alt='save'></img>
+                  <img src={check} className="check-icon" style={checkIconStyle} onAnimationEnd={() => {setcheckIconStyle({})}} alt='check' ></img>
                 </div>
               </div>
 
               {dietInfo.length > 0 && <div className='dietas-box-header-mid'>
-                <div className='value-box dietas-box' style={{backgroundColor: colorByPercentage(dietInfo[selectedDiet].plates.reduce((a, v) => a += v.food.reduce((a, v) => a += foodInfo.find(f => f.id == v.id).cal * v.amount, 0), 0), neededConsumption[0])}}> Calorias </div>
-                <div className='value-box dietas-box' style={{backgroundColor: colorByPercentage(dietInfo[selectedDiet].plates.reduce((a, v) => a += v.food.reduce((a, v) => a += foodInfo.find(f => f.id == v.id).carb * v.amount, 0), 0), neededConsumption[1])}}> Carboidratos </div>
-                <div className='value-box dietas-box' style={{backgroundColor: colorByPercentage(dietInfo[selectedDiet].plates.reduce((a, v) => a += v.food.reduce((a, v) => a += foodInfo.find(f => f.id == v.id).prot * v.amount, 0), 0), neededConsumption[2])}}> Proteínas </div>
+                <div className='value-box dietas-box' style={{backgroundColor: colorByPercentage(dietInfo[selectedDiet].plates.reduce((a, v) => a += v.food.reduce((a, v) => a += foodInfo.find(f => f.id === v.id).cal * v.amount, 0), 0), neededConsumption[0])}}> Calorias </div>
+                <div className='value-box dietas-box' style={{backgroundColor: colorByPercentage(dietInfo[selectedDiet].plates.reduce((a, v) => a += v.food.reduce((a, v) => a += foodInfo.find(f => f.id === v.id).carb * v.amount, 0), 0), neededConsumption[1])}}> Carboidratos </div>
+                <div className='value-box dietas-box' style={{backgroundColor: colorByPercentage(dietInfo[selectedDiet].plates.reduce((a, v) => a += v.food.reduce((a, v) => a += foodInfo.find(f => f.id === v.id).prot * v.amount, 0), 0), neededConsumption[2])}}> Proteínas </div>
               </div>}
               
               <div className='dietas-box-header-right'>
-                {dietInfo.length > 0 && "R$" + parseFloat(dietInfo[selectedDiet].plates.reduce((a, v) => a += v.food.reduce((a, v) => a += foodInfo.find(f => f.id == v.id).price * v.amount, 0), 0)).toFixed(2).replace(".", ",")}
+                {dietInfo.length > 0 && "R$" + parseFloat(dietInfo[selectedDiet].plates.reduce((a, v) => a += v.food.reduce((a, v) => a += foodInfo.find(f => f.id === v.id).price * v.amount, 0), 0)).toFixed(2).replace(".", ",")}
               </div>
             </header>
             <div>
               {dietInfo.length > 0 && dietInfo[selectedDiet].plates.map((ref) =>
                 <Section ref={ref} foodInfo={foodInfo} remove={removeFoodFromDiet} setAmount={setFoodAmount} draggingElement={draggingElement} />
               )}
+              <div className='section dietas-box add-ref-button' onClick={() => {addRef()}}> + </div>
             </div>
           </div>
         </div>

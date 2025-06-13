@@ -75,6 +75,7 @@
     display: flex;
     margin: 24px 16px;
     padding: 12px 16px;
+    min-height: 229px;
 }
 
 .left-section{
@@ -251,6 +252,20 @@
 
 .save-icon-container:hover{
     background-color: #aed581;
+}
+
+.add-ref-button{
+    height: 100px;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: larger;
+    color: #C9C9C9;
+    cursor: pointer;
+}
+
+.add-ref-button:hover{
+    background-color: #c9c9c920;
 }
 
 @media only screen and (max-width: 1535px){
