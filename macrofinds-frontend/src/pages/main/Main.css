@@ -268,10 +268,6 @@
     background-color: #c9c9c920;
 }
 
-.test{
-    z-index: 2;
-}
-
 @media only screen and (max-width: 1535px){
     .left-section{
         width: 40%;

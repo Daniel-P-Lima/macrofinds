@@ -15,7 +15,7 @@ export default function DraggableFood({food, setFoodPrice}){
             <div className='food-left'>
                 <p className="food-left-top">{food.name}</p>
                 <div className='food-left-bot'>
-                    R$/g &nbsp; <input id={food.id} type="number" className='dietas-box food-left-bot-input test' value={food.price} onChange={(e) => setFoodPrice(food.id, e.target.value)} onPointerDown={(e) => e.stopPropagation()} />
+                    R$/g &nbsp; <input id={food.id} type="number" className='dietas-box food-left-bot-input' value={food.price} onChange={(e) => setFoodPrice(food.id, e.target.value)} onPointerDown={(e) => e.stopPropagation()} />
                 </div>
             </div>
             <div className='food-right'>

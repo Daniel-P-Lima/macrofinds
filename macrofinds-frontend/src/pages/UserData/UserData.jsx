@@ -136,7 +136,7 @@ const UserData = () => {
                     <div className='container-content'>
                         <Typography variant="h5">Sua TMB é...</Typography>
                         <Typography variant="h3" className='tmb-val'>
-                            {tmb ? `${tmb} cal/dia` : '---'}
+                            {tmb ? `${tmb} kcal/dia` : '---'}
                             <img className='heat-img' src='/heat.png' alt="heat" />
                         </Typography>
                         <Typography variant="body1">

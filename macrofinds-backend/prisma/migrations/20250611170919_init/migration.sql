@@ -71,7 +71,7 @@ CREATE TABLE `diet` (
 
 LOCK TABLES `diet` WRITE;
 /*!40000 ALTER TABLE `diet` DISABLE KEYS */;
-INSERT INTO `diet` VALUES (2,'Dieta 1','M','2025-06-13 02:35:57.653','2025-06-13 08:37:41.146',1),(3,'Dieta 2','M','2025-06-13 02:35:57.656','2025-06-13 08:37:41.152',1);
+INSERT INTO `diet` VALUES (2,'Dieta 1','M','2025-06-13 02:35:57.653','2025-06-13 18:03:11.489',1),(3,'Dieta 2','M','2025-06-13 02:35:57.656','2025-06-13 18:03:11.497',1);
 /*!40000 ALTER TABLE `diet` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -100,7 +100,7 @@ CREATE TABLE `food` (
 
 LOCK TABLES `food` WRITE;
 /*!40000 ALTER TABLE `food` DISABLE KEYS */;
-INSERT INTO `food` VALUES (1,'Arroz Branco','g',0.07,3.59,0.06,0.798),(2,'Frango','g',0.011,2.39,0.27,0),(3,'Batata palha','g',0.1,0.73,0.018,0.16),(4,'Suco de laranja','ml',0.024,0.47,0.007,0.103);
+INSERT INTO `food` VALUES (1,'Arroz Branco','g',0.07,3.59,0.06,0.798),(2,'Frango','g',0.011,2.39,0.27,0),(3,'Batata palha','g',0.11,0.73,0.018,0.16),(4,'Suco de laranja','ml',0.024,0.47,0.007,0.103);
 /*!40000 ALTER TABLE `food` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -118,7 +118,7 @@ CREATE TABLE `plate` (
   PRIMARY KEY (`id`),
   KEY `Plate_dietId_fkey` (`dietId`),
   CONSTRAINT `Plate_dietId_fkey` FOREIGN KEY (`dietId`) REFERENCES `diet` (`id_dieta`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -127,7 +127,7 @@ CREATE TABLE `plate` (
 
 LOCK TABLES `plate` WRITE;
 /*!40000 ALTER TABLE `plate` DISABLE KEYS */;
-INSERT INTO `plate` VALUES (25,'Refeição 1',2),(26,'Refeição 2',2),(27,'Refeição 1',3),(28,'Refeição 2',3);
+INSERT INTO `plate` VALUES (59,'Refeição 1',2),(60,'Refeição 2',2),(61,'Refeição 3',2),(62,'Refeição 1',3),(63,'Refeição 2',3);
 /*!40000 ALTER TABLE `plate` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -148,7 +148,7 @@ CREATE TABLE `platefood` (
   KEY `PlateFood_foodId_fkey` (`foodId`),
   CONSTRAINT `PlateFood_foodId_fkey` FOREIGN KEY (`foodId`) REFERENCES `food` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `PlateFood_plateId_fkey` FOREIGN KEY (`plateId`) REFERENCES `plate` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=71 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=162 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -157,7 +157,7 @@ CREATE TABLE `platefood` (
 
 LOCK TABLES `platefood` WRITE;
 /*!40000 ALTER TABLE `platefood` DISABLE KEYS */;
-INSERT INTO `platefood` VALUES (60,25,1,150),(61,25,2,100),(62,25,3,30),(63,26,2,150),(64,26,4,100),(65,27,2,100),(66,27,1,20),(67,28,1,150),(68,28,2,100),(69,28,3,30),(70,28,4,200);
+INSERT INTO `platefood` VALUES (149,59,1,150),(150,59,2,100),(151,59,3,30),(152,60,2,150),(153,60,4,100),(154,61,1,100),(155,61,2,150),(156,62,2,100),(157,62,1,20),(158,63,1,150),(159,63,2,100),(160,63,3,30),(161,63,4,200);
 /*!40000 ALTER TABLE `platefood` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -193,7 +193,7 @@ CREATE TABLE `usuario` (
 
 LOCK TABLES `usuario` WRITE;
 /*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
-INSERT INTO `usuario` VALUES (1,'Afonso','afonso@gmail.com','12345678',24,70,179,'M','M','M',2371.68,'2008-10-03 22:59:52.000','2025-06-13 06:47:44.462');
+INSERT INTO `usuario` VALUES (1,'Afonso','afonso@gmail.com','12345678',24,70,179,'M','M','M',2371.68,'2008-10-03 22:59:52.000','2025-06-13 18:04:44.813');
 /*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -206,4 +206,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-06-13  5:44:39
+-- Dump completed on 2025-06-13 15:06:46
