@@ -29,6 +29,35 @@
       res.status(500).json({ error: "Falha ao criar alimento" });
     }
   });
+
+  app.put('/foods', async (req, res) => {
+    const foodUpdates = req.body;
+  
+    if (!Array.isArray(foodUpdates)) {
+      return res.status(400).json({ error: 'Body não é um array' });
+    }
+  
+    try {
+      const updatePromises = foodUpdates.map(food => {
+        const { id, price } = food;
+  
+        if (typeof id !== 'number' || typeof price !== 'number' || price < 0) {
+          throw new Error('Id ou preço inválido');
+        }
+  
+        return prisma.food.update({
+          where: { id },
+          data: { price }
+        });
+      });
+  
+      const updatedFoods = await Promise.all(updatePromises);
+      res.json(updatedFoods);
+    } catch (error) {
+      res.status(500).json({ error: 'Erro ao tentar atualizar foods', details: error.message });
+    }
+  });
+
 app.put("/dietas", async (req, res) => {
   const dietsPayload = req.body;
 
@@ -130,6 +159,7 @@ app.get("/dietas", async (_, res) => {
       }
     });
     const resultado = dietas.map(diet => ({
+      id: diet.id,
       name: diet.name,
       plates: diet.plates.map(plate => ({
         name: plate.name,
@@ -203,15 +233,16 @@ app.get("/dietas", async (_, res) => {
   });
   app.get("/usuario/:id_usuario", async (req, res) => {
     try {
-      const usuario = await prisma.usuarios.findUnique({
-        where: { id_usuario: Number(req.params.id_usuario) },
+      const usuario = await prisma.usuario.findUnique({
+        where: { id: Number(req.params.id_usuario) },
         select: {
-          altura_usuario: true,
-          sexo_usuario: true,
-          idade_usuario: true,
-          peso_usuario: true,
-          tipo_atividade_fisica: true,
-          tmb_usuario: true 
+          altura: true,
+          sexo: true,
+          idade: true,
+          peso: true,
+          intensidade: true,
+          tmb: true, 
+          objetivo: true
         }
       });
       if (!usuario)
@@ -227,23 +258,25 @@ app.get("/dietas", async (_, res) => {
     const {
       peso,            // kg
       altura,          // cm
-      sexo,            // 'Masculino' | 'Feminino'
+      sexo,            // 'M' | 'F'
       intensidade,     // 'N' | 'M' | 'I'
       idade,           // anos
-      tmb              // opcional
+      tmb,             // opcional
+      objetivo
     } = req.body;
 
     const data = {};
-    if (peso        !== undefined) data.peso_usuario     = peso;
-    if (altura      !== undefined) data.altura_usuario   = altura;
-    if (sexo        !== undefined) data.sexo_usuario     = sexo;
-    if (intensidade !== undefined) data.tipo_atividade_fisica = intensidade;
-    if (idade       !== undefined) data.idade_usuario    = idade;
-    if (tmb         !== undefined) data.tmb_usuario      = tmb;
+    if (peso        !== undefined) data.peso        = peso;
+    if (altura      !== undefined) data.altura      = altura;
+    if (sexo        !== undefined) data.sexo        = sexo;
+    if (intensidade !== undefined) data.intensidade = intensidade;
+    if (idade       !== undefined) data.idade       = idade;
+    if (tmb         !== undefined) data.tmb         = tmb;
+    if (objetivo    !== undefined) data.objetivo    = objetivo;
 
     try {
-      await prisma.usuarios.update({
-        where: { id_usuario: Number(req.params.id_usuario) },
+      await prisma.usuario.update({
+        where: { id: Number(req.params.id_usuario) },
         data
       });
       res.json({ ok: true });

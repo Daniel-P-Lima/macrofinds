@@ -5,6 +5,8 @@ import Navbar from "../../assets/Navbar/Navbar"
 import DraggableFood from "./components/DraggableFood"
 import { DndContext } from "@dnd-kit/core"
 import { MenuItem, FormControl, Select, Box } from '@mui/material';
+import save from "./assets/diskette.svg"
+import check from "./assets/check.png"
 
 export default function Main(){
   const [dietInfo, setDietInfo] = useState([]);
@@ -13,56 +15,38 @@ export default function Main(){
   const [selectedDiet, setSelectedDiet] = useState(0);
   const [userData, setUserData] = useState({});
   const [neededConsumption, setNeededConsumption] = useState([]);
+  const [checkIconStyle, setcheckIconStyle] = useState({});
 
   useEffect(() => {
-    setDietInfo([{name: "Dieta 1",
-                  plates: [{name: "Refeição 1",
-                            food: [{id: 0, amount: 150}, {id: 1, amount: 100}, {id: 2, amount: 30}, {id: 3, amount: 200}]
-                           },
-                           {name: "Refeição 2",
-                            food: [{id: 1, amount: 150}]
-                           }]
-                 },
-                 {name: "Dieta 2",
-                  plates: [{name: "Refeição 1",
-                            food: [{id: 1, amount: 100}]
-                           },
-                           {name: "Refeição 2",
-                            food: [{id: 0, amount: 150}, {id: 1, amount: 100}, {id: 2, amount: 30}, {id: 3, amount: 200}]
-                           }]
-                 }
-                ])
+    fetch("http://localhost:5000/dietas")
+      .then(res => res.json())
+      .then(data => {setDietInfo(data)}).then(console.log(dietInfo))
+    // eslint-disable-next-line
   }, []);
   
   useEffect(() => {
-    setFoodInfo([{id: 0, name: "Arroz Branco", unit: "g", price: 0.07, cal: 3590, prot: 0.06, carb: 0.798},
-                 {id: 1, name: "Frango", unit: "g", price: 0.1, cal: 2390, prot: 0.27, carb: 0},
-                 {id: 2, name: "Batata palha", unit: "g", price: 0.05, cal: 730, prot: 0.018, carb: 0.16},
-                 {id: 3, name: "Suco de laranja", unit: "ml", price: 0.05, cal: 470, prot: 0.007, carb: 0.103}])
+    fetch("http://localhost:5000/foods")
+      .then(res => res.json())
+      .then(data => {setFoodInfo(data)})
+    /*setFoodInfo([{id: 1, name: "Arroz Branco", unit: "g", price: 0.005, cal: 3.59, prot: 0.06, carb: 0.798},
+                 {id: 2, name: "Frango", unit: "g", price: 0.011, cal: 2.39, prot: 0.27, carb: 0},
+                 {id: 3, name: "Batata palha", unit: "g", price: 0.1, cal: 0.73, prot: 0.018, carb: 0.16},
+                 {id: 4, name: "Suco de laranja", unit: "ml", price: 0.024, cal: 0.47, prot: 0.007, carb: 0.103}])*/
   }, []);
 
   useEffect(() => {
-    setUserData({
-      peso: 54,
-      altura: 173,
-      sexo: "M",
-      intensidade: "M",
-      idade: 20,
-      objetivo: "M"
-    });
-    /*fetch('http://localhost:5000/usuario/1')
+    fetch('http://localhost:5000/usuario/1')
       .then(res => res.json())
       .then(data => {
         setUserData({
-            peso: data.peso_usuario || '',
-            altura: data.altura_usuario || '',
-            sexo: data.sexo_usuario || '',
-            intensidade: data.tipo_atividade_fisica || '',
-            idade: data.idade_usuario || '',
-            objetivo: data.obj_usuario || ''
-        });
-      }
-    );*/
+          peso: data.peso || '',
+          altura: data.altura || '',
+          sexo: data.sexo || '',
+          intensidade: data.intensidade || '',
+          idade: data.idade || '',
+          tmb_usuario: data.tmb || '',
+          objetivo: data.objetivo || ''
+        })});
   }, []);
 
   useEffect(() => {
@@ -179,7 +163,7 @@ export default function Main(){
                     food.id === foodId
                     ? {
                         ...food,
-                        amount: newAmount
+                        amount: parseInt(newAmount)
                       }
                     : food
                   )
@@ -189,6 +173,52 @@ export default function Main(){
         } : diet
       )
     )
+  }
+
+  function setFoodPrice(foodId, newPrice){
+    console.log(foodInfo)
+    setFoodInfo(() => 
+      foodInfo.map(food => 
+        food.id === foodId
+        ? {
+          ...food,
+          price: parseFloat(newPrice)
+        } : food
+      )
+    )
+  }
+
+  function saveDiet(){
+    const data = dietInfo.map(diet => ({
+      ...diet,
+      userId: 1,
+      objective: "M" 
+    }));
+
+    fetch("http://localhost:5000/dietas", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    })
+    
+    fetch("http://localhost:5000/foods", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(foodInfo)
+    })
+  }
+
+  function addRef(){
+    setDietInfo(() => 
+      dietInfo.map((diet, i) => 
+      i === selectedDiet
+      ? {
+        ...diet,
+        plates: [...diet.plates, {name: "Refeição " + (diet.plates.length + 1), food: []}]
+      } : diet
+    ))
+
+    console.log(dietInfo)
   }
 
   return (
@@ -227,22 +257,28 @@ export default function Main(){
                     )}
                   </FormControl>
                 </Box>
+
+                <div className='save-icon-container' onClick={() => {saveDiet(); setcheckIconStyle({animation: "savedDiet 2s"})}}>
+                  <img src={save} className="save-icon" alt='save'></img>
+                  <img src={check} className="check-icon" style={checkIconStyle} onAnimationEnd={() => {setcheckIconStyle({})}} alt='check' ></img>
+                </div>
               </div>
 
               {dietInfo.length > 0 && <div className='dietas-box-header-mid'>
-                <div className='value-box dietas-box' style={{backgroundColor: colorByPercentage(dietInfo[selectedDiet].plates.reduce((a, v) => a += v.food.reduce((a, v) => a += foodInfo[v.id].cal * v.amount, 0), 0), neededConsumption[0])}}> Calorias </div>
-                <div className='value-box dietas-box' style={{backgroundColor: colorByPercentage(dietInfo[selectedDiet].plates.reduce((a, v) => a += v.food.reduce((a, v) => a += foodInfo[v.id].carb * v.amount, 0), 0), neededConsumption[1])}}> Carboidratos </div>
-                <div className='value-box dietas-box' style={{backgroundColor: colorByPercentage(dietInfo[selectedDiet].plates.reduce((a, v) => a += v.food.reduce((a, v) => a += foodInfo[v.id].prot * v.amount, 0), 0), neededConsumption[2])}}> Proteínas </div>
+                <div className='value-box dietas-box' style={{backgroundColor: colorByPercentage(dietInfo[selectedDiet].plates.reduce((a, v) => a += v.food.reduce((a, v) => a += foodInfo.find(f => f.id === v.id).cal * v.amount, 0), 0), neededConsumption[0])}}> Calorias </div>
+                <div className='value-box dietas-box' style={{backgroundColor: colorByPercentage(dietInfo[selectedDiet].plates.reduce((a, v) => a += v.food.reduce((a, v) => a += foodInfo.find(f => f.id === v.id).carb * v.amount, 0), 0), neededConsumption[1])}}> Carboidratos </div>
+                <div className='value-box dietas-box' style={{backgroundColor: colorByPercentage(dietInfo[selectedDiet].plates.reduce((a, v) => a += v.food.reduce((a, v) => a += foodInfo.find(f => f.id === v.id).prot * v.amount, 0), 0), neededConsumption[2])}}> Proteínas </div>
               </div>}
               
               <div className='dietas-box-header-right'>
-                {dietInfo.length > 0 && "R$" + parseFloat(dietInfo[selectedDiet].plates.reduce((a, v) => a += v.food.reduce((a, v) => a += foodInfo[v.id].price * v.amount, 0), 0)).toFixed(2).replace(".", ",")}
+                {dietInfo.length > 0 && "R$" + parseFloat(dietInfo[selectedDiet].plates.reduce((a, v) => a += v.food.reduce((a, v) => a += foodInfo.find(f => f.id === v.id).price * v.amount, 0), 0)).toFixed(2).replace(".", ",")}
               </div>
             </header>
             <div>
               {dietInfo.length > 0 && dietInfo[selectedDiet].plates.map((ref) =>
                 <Section ref={ref} foodInfo={foodInfo} remove={removeFoodFromDiet} setAmount={setFoodAmount} draggingElement={draggingElement} />
               )}
+              <div className='section dietas-box add-ref-button' onClick={() => {addRef()}}> + </div>
             </div>
           </div>
         </div>
@@ -254,7 +290,7 @@ export default function Main(){
             </header>
             <div className='right-column-content'>
               {foodInfo.map((food) =>
-                <DraggableFood food={food}/>
+                <DraggableFood food={food} setFoodPrice={setFoodPrice} />
               )}
             </div>
           </div>

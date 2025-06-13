@@ -22,7 +22,8 @@ const UserData = () => {
         sexo: '',
         intensidade: '',
         idade: '',
-        tmb_usuario: ''
+        tmb_usuario: '',
+        objetivo: ''
     });
     const [salvarTmb, setSalvarTmb] = useState(true);
     const [tmb, setTmb] = useState('');
@@ -34,12 +35,13 @@ const UserData = () => {
             .then(res => res.json())
             .then(data => {
                 setUserData({
-                    peso: data.peso_usuario || '',
-                    altura: data.altura_usuario || '',
-                    sexo: data.sexo_usuario || '',
-                    intensidade: data.tipo_atividade_fisica || '',
-                    idade: data.idade_usuario || '',
-                    tmb_usuario: data.tmb_usuario || ''
+                    peso: data.peso || '',
+                    altura: data.altura || '',
+                    sexo: data.sexo || '',
+                    intensidade: data.intensidade || '',
+                    idade: data.idade || '',
+                    tmb_usuario: data.tmb || '',
+                    objetivo: data.objetivo || ''
                 });
 
                 if (
@@ -105,9 +107,7 @@ const UserData = () => {
                     sexo: userData.sexo,
                     intensidade: userData.intensidade,
                     idade: parseInt(userData.idade, 10),
-                    tmb: parseFloat(tmbFinal.toFixed(2)),
-                    proteinas: proteinas.toFixed(2),
-                    carboidratos: carboidratos.toFixed(2)
+                    objetivo: userData.objetivo
                 })
             })
                 .then(async (res) => {
@@ -136,7 +136,7 @@ const UserData = () => {
                     <div className='container-content'>
                         <Typography variant="h5">Sua TMB é...</Typography>
                         <Typography variant="h3" className='tmb-val'>
-                            {tmb ? `${tmb} cal/dia` : '---'}
+                            {tmb ? `${tmb} kcal/dia` : '---'}
                             <img className='heat-img' src='/heat.png' alt="heat" />
                         </Typography>
                         <Typography variant="body1">
