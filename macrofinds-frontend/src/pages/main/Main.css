@@ -268,6 +268,10 @@
     background-color: #c9c9c920;
 }
 
+.test{
+    z-index: 2;
+}
+
 @media only screen and (max-width: 1535px){
     .left-section{
         width: 40%;
@@ -283,6 +287,12 @@
         grid-template-columns: repeat(2, 1fr);
     }
 
+    .right-column-content{
+        grid-template-columns: 1fr;
+    }
+}
+
+@media only screen and (max-width: 1445px){
     .right-column-content{
         grid-template-columns: 1fr;
     }

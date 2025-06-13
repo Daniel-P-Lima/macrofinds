@@ -175,6 +175,19 @@ export default function Main(){
     )
   }
 
+  function setFoodPrice(foodId, newPrice){
+    console.log(foodInfo)
+    setFoodInfo(() => 
+      foodInfo.map(food => 
+        food.id === foodId
+        ? {
+          ...food,
+          price: parseFloat(newPrice)
+        } : food
+      )
+    )
+  }
+
   function saveDiet(){
     const data = dietInfo.map(diet => ({
       ...diet,
@@ -186,6 +199,12 @@ export default function Main(){
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data)
+    })
+    
+    fetch("http://localhost:5000/foods", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(foodInfo)
     })
   }
 
@@ -271,7 +290,7 @@ export default function Main(){
             </header>
             <div className='right-column-content'>
               {foodInfo.map((food) =>
-                <DraggableFood food={food}/>
+                <DraggableFood food={food} setFoodPrice={setFoodPrice} />
               )}
             </div>
           </div>

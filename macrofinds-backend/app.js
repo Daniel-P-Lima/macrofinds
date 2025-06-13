@@ -29,6 +29,35 @@
       res.status(500).json({ error: "Falha ao criar alimento" });
     }
   });
+
+  app.put('/foods', async (req, res) => {
+    const foodUpdates = req.body;
+  
+    if (!Array.isArray(foodUpdates)) {
+      return res.status(400).json({ error: 'Body não é um array' });
+    }
+  
+    try {
+      const updatePromises = foodUpdates.map(food => {
+        const { id, price } = food;
+  
+        if (typeof id !== 'number' || typeof price !== 'number' || price < 0) {
+          throw new Error('Id ou preço inválido');
+        }
+  
+        return prisma.food.update({
+          where: { id },
+          data: { price }
+        });
+      });
+  
+      const updatedFoods = await Promise.all(updatePromises);
+      res.json(updatedFoods);
+    } catch (error) {
+      res.status(500).json({ error: 'Erro ao tentar atualizar foods', details: error.message });
+    }
+  });
+
 app.put("/dietas", async (req, res) => {
   const dietsPayload = req.body;
 
