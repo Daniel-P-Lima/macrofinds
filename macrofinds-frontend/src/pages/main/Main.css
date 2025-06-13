@@ -40,6 +40,8 @@
 }
 
 .dietas-box-header-left{
+    display: flex;
+    gap: 6px;
     flex: 0 0 fit-content;
 }
 
@@ -217,6 +219,38 @@
     grid-auto-rows: 1fr;
     padding: 8px;
     gap: 6px;
+}
+
+.save-icon-container{
+    display: flex;
+    align-items: center;
+    padding: 6px;
+    aspect-ratio: 1 / 1;
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+.save-icon{
+    position: absolute;
+    height: 32px;
+}
+
+@keyframes savedDiet{
+    0% {opacity: 0;}
+    50% {opacity: 1;}
+    100% {opacity: 0;}
+}
+
+.check-icon{
+    opacity: 0;
+    position: relative;
+    top: 0;
+    left: 0;
+    height: 32px;
+}
+
+.save-icon-container:hover{
+    background-color: #aed581;
 }
 
 @media only screen and (max-width: 1535px){
